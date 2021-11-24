@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { loginAction } from '../Actions';
 
 class Login extends React.Component {
   constructor(props) {
@@ -17,7 +19,6 @@ class Login extends React.Component {
       [name]: value,
       isButtonDisable: this.checkButton(),
     });
-    console.log(this.state);
   }
 
   checkButton() {
@@ -28,8 +29,11 @@ class Login extends React.Component {
   }
 
   handleClick(event) {
-    event.preventDefault();
+    const { name, email } = this.state;
+    const { login } = this.props;
     const { history } = this.props;
+    event.preventDefault();
+    login({ name, email });
     history.push('/game');
   }
 
@@ -73,6 +77,11 @@ Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
+  login: PropTypes.func.isRequired,
 };
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  login: (player) => dispatch(loginAction(player)),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
