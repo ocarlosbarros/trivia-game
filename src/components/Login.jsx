@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Login extends React.Component {
   constructor(props) {
@@ -8,6 +9,7 @@ class Login extends React.Component {
       email: '',
       isButtonDisable: true,
     };
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange({ target: { value, name } }) {
@@ -25,6 +27,12 @@ class Login extends React.Component {
     return result;
   }
 
+  handleClick(event) {
+    event.preventDefault();
+    const { history } = this.props;
+    history.push('/game');
+  }
+
   render() {
     const { name, email, isButtonDisable } = this.state;
     return (
@@ -34,7 +42,7 @@ class Login extends React.Component {
           type="text"
           name="name"
           placeholder="Juliette Freire"
-          data-testId="input-player-name"
+          data-testid="input-player-name"
           value={ name }
           onChange={ (e) => this.handleChange(e) }
         />
@@ -43,14 +51,15 @@ class Login extends React.Component {
           typeof="email"
           name="email"
           placeholder="juliette123@gmail.com"
-          data-testId="input-gravatar-email"
+          data-testid="input-gravatar-email"
           value={ email }
           onChange={ (e) => this.handleChange(e) }
         />
         <button
           type="submit"
           disabled={ isButtonDisable }
-          data-testId="btn-play"
+          data-testid="btn-play"
+          onClick={ this.handleClick }
         >
           Jogar
 
@@ -59,5 +68,11 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
 
 export default Login;

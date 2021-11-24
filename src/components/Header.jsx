@@ -5,14 +5,14 @@ import './Header.css';
 
 class Header extends Component {
   render() {
-    const { player: { name, path, score } } = this.props;
+    const { player: { name, score, gravatarEmail } } = this.props;
     return (
       <header className="header">
         <div>
-          <img data-testId="header-profile-picture" src={ path } alt="" />
+          <img data-testid="header-profile-picture" src={ gravatarEmail } alt="" />
         </div>
-        <p data-testId="header-player-name">{name}</p>
-        <p data-testId="header-score">{ score }</p>
+        <p data-testid="header-player-name">{ name }</p>
+        <p data-testid="header-score">{ score }</p>
       </header>
     );
   }
