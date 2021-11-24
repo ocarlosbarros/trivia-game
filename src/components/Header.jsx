@@ -5,7 +5,7 @@ import './Header.css';
 
 class Header extends Component {
   render() {
-    const { player: { name, score, gravatarEmail } } = this.props;
+    const { player: { gravatarEmail, name, score } } = this.props;
     return (
       <header className="header">
         <div>
@@ -19,11 +19,16 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-  player: PropTypes.instanceOf(Object).isRequired,
+  player: PropTypes.shape({
+    gravatarEmail: PropTypes.string,
+    name: PropTypes.string,
+    score: PropTypes.number,
+  }).isRequired,
+
 };
 
 const mapStateToProps = (state) => ({
-  player: state.player.player,
+  player: state.player,
 });
 
 export default connect(mapStateToProps, null)(Header);
