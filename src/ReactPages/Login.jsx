@@ -24,7 +24,6 @@ class Login extends React.Component {
   checkButton() {
     const { name, email } = this.state;
     const result = !(name && email);
-    console.log(result);
     return result;
   }
 
