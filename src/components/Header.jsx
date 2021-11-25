@@ -1,34 +1,54 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { getGravatarImageAction } from '../Actions';
 import './Header.css';
 
 class Header extends Component {
+  componentDidMount() {
+    const { getGravatarImage } = this.props;
+    const { gravatarEmail } = this.props;
+    getGravatarImage(gravatarEmail);
+  }
+
   render() {
-    const { player: { gravatarEmail, name, score } } = this.props;
+    const { name, score, imagePath } = this.props;
     return (
       <header className="header">
-        <div>
-          <img data-testid="header-profile-picture" src={ gravatarEmail } alt="" />
+        <div className="player-info">
+          <img data-testid="header-profile-picture" src={ imagePath } alt="" />
+          <p data-testid="header-player-name">
+            Jogador:
+            {' '}
+            { name }
+          </p>
         </div>
-        <p data-testid="header-player-name">{ name }</p>
-        <p data-testid="header-score">{ score }</p>
+        <p data-testid="header-score">
+          Pontos:
+          {' '}
+          { score }
+        </p>
       </header>
     );
   }
 }
 
 Header.propTypes = {
-  player: PropTypes.shape({
-    gravatarEmail: PropTypes.string,
-    name: PropTypes.string,
-    score: PropTypes.number,
-  }).isRequired,
-
+  gravatarEmail: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
+  imagePath: PropTypes.string.isRequired,
+  getGravatarImage: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  player: state.player,
+  name: state.player.name,
+  imagePath: state.player.imagePath,
+  score: state.player.score,
 });
 
-export default connect(mapStateToProps, null)(Header);
+const mapDispatchToProps = (dispatch) => ({
+  getGravatarImage: (email) => dispatch(getGravatarImageAction(email)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

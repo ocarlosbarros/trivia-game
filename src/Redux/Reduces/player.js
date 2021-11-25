@@ -1,14 +1,14 @@
-import { GET_PLAYER, LOGIN } from '../../Actions';
+import { GET_PLAYER, GET_GRAVATAR_IMAGE, LOGIN } from '../../Actions';
 
 const INITIAL_STATE = {
   name: '',
   assertions: 0,
   score: 0,
   gravatarEmail: '',
+  imagePath: '',
 };
 
 function player(state = INITIAL_STATE, action) {
-  console.log(action.payload);
   switch (action.type) {
   case LOGIN:
     return {
@@ -18,6 +18,9 @@ function player(state = INITIAL_STATE, action) {
     };
   case GET_PLAYER:
     return { ...state };
+
+  case GET_GRAVATAR_IMAGE:
+    return { ...state, imagePath: action.payload };
   default:
     return state;
   }

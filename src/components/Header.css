@@ -1,4 +1,19 @@
 .header {
+  align-items: center;
   box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
-  height: 100px;
+  display: flex;
+  justify-content: space-around;
+  padding: 1em;
 }
+
+.player-info {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-grow: 2;
+}
+
+.player-info p {
+  margin-left: 2em;
+}
+
