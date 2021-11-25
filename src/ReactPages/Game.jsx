@@ -32,6 +32,7 @@ class Game extends React.Component {
               <p data-testid="question-category">{answers[currentId].category}</p>
               <p data-testid="question-text">{answers[currentId].question}</p>
               <RenderAlternatives
+                answersList={ answers }
                 correct={ answers[currentId].correct_answer }
                 incorrect={ answers[currentId].incorrect_answers }
               />

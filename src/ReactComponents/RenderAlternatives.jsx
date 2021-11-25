@@ -18,6 +18,7 @@ class RenderAlternatives extends React.Component {
     };
 
     this.selectAnswer = this.selectAnswer.bind(this);
+    this.getDifficultyAnswer = this.getDifficultyAnswer.bind(this);
   }
 
   componentDidMount() {
@@ -32,21 +33,34 @@ class RenderAlternatives extends React.Component {
     return `wrong-answer-${id}`;
   }
 
+  getAssignedWeight(difficulty) {
+    const assignedWeight = {
+      hard: 3,
+      medium: 2,
+      easy: 1,
+    };
+    return assignedWeight[difficulty];
+  }
+
+  getDifficultyAnswer(selectedAnswer = '', answersList = []) {
+    const answerFound = answersList.find((answer) => (
+      selectedAnswer === answer.correct_answer));
+    if (answerFound) return answerFound.difficulty;
+  }
+
   shuffle(alt) {
     const alternatives = alt.sort(() => Math.random() - randomizer);
     this.setState({ alternatives });
   }
 
-  // calculateScore({ target }) {
-  //   // 10 + ( timer * dificuldade )
-  //   console.log(target.className);
-  // }
-
   selectAnswer({ target }) {
-    const { selectedAnswer } = this.props;
-    console.log(selectedAnswer);
+    const { setAssertion, answersList } = this.props;
+    const selectedAnswer = target.innerText;
     const assertion = target.className === CORRECT_ANSWER ? 1 : 0;
-    selectedAnswer(assertion);
+    setAssertion(assertion);
+    const difficulty = this.getDifficultyAnswer(selectedAnswer, answersList);
+    const assignedWeight = this.getAssignedWeight(difficulty);
+    console.log(teste, teste_2);
   }
 
   render() {
@@ -77,11 +91,11 @@ class RenderAlternatives extends React.Component {
 RenderAlternatives.propTypes = {
   correct: PropTypes.string.isRequired,
   incorrect: PropTypes.arrayOf(String).isRequired,
-  selectedAnswer: PropTypes.func.isRequired,
+  setAssertion: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  selectedAnswer: (target) => dispatch(actionChangeScore(target)),
+  setAssertion: (target) => dispatch(actionChangeScore(target)),
 });
 
 export default connect(null, mapDispatchToProps)(RenderAlternatives);
