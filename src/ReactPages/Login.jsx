@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 
 class Login extends React.Component {
   constructor(props) {
@@ -62,6 +63,16 @@ class Login extends React.Component {
           Jogar
 
         </button>
+        <header className="App-header">
+          <button
+            type="submit"
+            data-testid="btn-settings"
+          >
+            <Link to="config">
+              Configurações
+            </Link>
+          </button>
+        </header>
       </form>
     );
     return redirect ? <Redirect to="/game" /> : form;
