@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import getToken from '../services/getToken';
 import { actionGetAnswers } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
+import Header from '../ReactComponents/Header';
 
 class Game extends React.Component {
   constructor() {
@@ -24,18 +25,21 @@ class Game extends React.Component {
     const { answers } = this.props;
     const { currentId } = this.state;
     return (
-      <div className="quiz">
-        {answers && (
-          <>
-            <p data-testid="question-category">{answers[currentId].category}</p>
-            <p data-testid="question-text">{answers[currentId].question}</p>
-            <RenderAlternatives
-              correct={ answers[currentId].correct_answer }
-              incorrect={ answers[currentId].incorrect_answers }
-            />
-          </>
-        )}
-      </div>
+      <>
+        <Header />
+        <div className="quiz">
+          {answers && (
+            <>
+              <p data-testid="question-category">{answers[currentId].category}</p>
+              <p data-testid="question-text">{answers[currentId].question}</p>
+              <RenderAlternatives
+                correct={ answers[currentId].correct_answer }
+                incorrect={ answers[currentId].incorrect_answers }
+              />
+            </>
+          )}
+        </div>
+      </>
     );
   }
 }
