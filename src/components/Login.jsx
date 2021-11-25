@@ -34,7 +34,7 @@ class Login extends React.Component {
           type="text"
           name="name"
           placeholder="Juliette Freire"
-          data-testId="input-player-name"
+          data-testid="input-player-name"
           value={ name }
           onChange={ (e) => this.handleChange(e) }
         />
@@ -43,14 +43,14 @@ class Login extends React.Component {
           typeof="email"
           name="email"
           placeholder="juliette123@gmail.com"
-          data-testId="input-gravatar-email"
+          data-testid="input-gravatar-email"
           value={ email }
           onChange={ (e) => this.handleChange(e) }
         />
         <button
           type="submit"
           disabled={ isButtonDisable }
-          data-testId="btn-play"
+          data-testid="btn-play"
         >
           Jogar
 
