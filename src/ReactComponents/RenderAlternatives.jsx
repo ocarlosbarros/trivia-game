@@ -32,6 +32,11 @@ class RenderAlternatives extends React.Component {
     this.setState({ alternatives });
   }
 
+  calculateScore({ target }) {
+    // 10 + ( timer * dificuldade )
+    console.log(target.className);
+  }
+
   render() {
     const { alternatives, correct } = this.state;
     return (
@@ -39,8 +44,12 @@ class RenderAlternatives extends React.Component {
         {alternatives
           && alternatives.map((curr, id) => (
             <button
+              onClick={ this.calculateScore }
               data-testid={
                 curr === correct ? 'correct-answer' : this.getIncorrectId(curr)
+              }
+              className={
+                curr === correct ? 'correct-answer' : 'incorrect-answer'
               }
               key={ id }
               type="button"
