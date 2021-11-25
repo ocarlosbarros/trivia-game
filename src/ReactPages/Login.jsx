@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router';
 
 class Login extends React.Component {
   constructor(props) {
@@ -7,7 +8,10 @@ class Login extends React.Component {
       name: '',
       email: '',
       isButtonDisable: true,
+      redirect: false,
     };
+
+    this.redirect = this.redirect.bind(this);
   }
 
   handleChange({ target: { value, name } }) {
@@ -15,26 +19,28 @@ class Login extends React.Component {
       [name]: value,
       isButtonDisable: this.checkButton(),
     });
-    console.log(this.state);
   }
 
   checkButton() {
     const { name, email } = this.state;
     const result = !(name && email);
-
     return result;
   }
 
+  redirect() {
+    this.setState({ redirect: true });
+  }
+
   render() {
-    const { name, email, isButtonDisable } = this.state;
-    return (
+    const { name, email, isButtonDisable, redirect } = this.state;
+    const form = (
       <form>
         <p>Nome</p>
         <input
           type="text"
           name="name"
           placeholder="Juliette Freire"
-          data-testId="input-player-name"
+          data-testid="input-player-name"
           value={ name }
           onChange={ (e) => this.handleChange(e) }
         />
@@ -43,20 +49,22 @@ class Login extends React.Component {
           typeof="email"
           name="email"
           placeholder="juliette123@gmail.com"
-          data-testId="input-gravatar-email"
+          data-testid="input-gravatar-email"
           value={ email }
           onChange={ (e) => this.handleChange(e) }
         />
         <button
           type="submit"
           disabled={ isButtonDisable }
-          data-testId="btn-play"
+          data-testid="btn-play"
+          onClick={ this.redirect }
         >
           Jogar
 
         </button>
       </form>
     );
+    return redirect ? <Redirect to="/game" /> : form;
   }
 }
 
