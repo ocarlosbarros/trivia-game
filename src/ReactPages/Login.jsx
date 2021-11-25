@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { loginAction } from '../Redux/Actions';
+import getToken from '../services/getToken';
 
 class Login extends React.Component {
   constructor(props) {
@@ -29,12 +30,15 @@ class Login extends React.Component {
     return result;
   }
 
-  handleClick(event) {
+  async handleClick(event) {
     const { name, email } = this.state;
     const { login } = this.props;
     const { history } = this.props;
     event.preventDefault();
     login({ name, email });
+    const { token } = await getToken();
+    console.log(token);
+    localStorage.setItem('token', JSON.stringify(token));
     history.push('/game');
   }
 

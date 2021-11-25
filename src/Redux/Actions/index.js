@@ -39,6 +39,6 @@ export {
   getGravatarImageAction,
   GET_GRAVATAR_IMAGE,
   actionGetAnswers,
-  actionAnswers,
   GET_ANSWERS,
+  actionAnswers,
 };

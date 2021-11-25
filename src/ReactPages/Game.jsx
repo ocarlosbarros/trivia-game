@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import getToken from '../services/getToken';
 import { actionGetAnswers } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
@@ -17,7 +16,8 @@ class Game extends React.Component {
 
   async componentDidMount() {
     const { getAnswers } = this.props;
-    const { token } = await getToken();
+    const token = JSON.parse(localStorage.getItem('token'));
+    console.log(token);
     getAnswers(token);
   }
 
