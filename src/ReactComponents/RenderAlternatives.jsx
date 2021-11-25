@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { actionChangeScore } from '../Redux/Actions';
 
 const randomizer = 0.5;
+const CORRECT_ANSWER = 'correct_answer';
 
 class RenderAlternatives extends React.Component {
   constructor(props) {
@@ -13,6 +16,8 @@ class RenderAlternatives extends React.Component {
       correct: props.correct,
       incorrect: props.incorrect,
     };
+
+    this.selectAnswer = this.selectAnswer.bind(this);
   }
 
   componentDidMount() {
@@ -32,9 +37,16 @@ class RenderAlternatives extends React.Component {
     this.setState({ alternatives });
   }
 
-  calculateScore({ target }) {
-    // 10 + ( timer * dificuldade )
-    console.log(target.className);
+  // calculateScore({ target }) {
+  //   // 10 + ( timer * dificuldade )
+  //   console.log(target.className);
+  // }
+
+  selectAnswer({ target }) {
+    const { selectedAnswer } = this.props;
+    console.log(selectedAnswer);
+    const assertion = target.className === CORRECT_ANSWER ? 1 : 0;
+    selectedAnswer(assertion);
   }
 
   render() {
@@ -44,12 +56,12 @@ class RenderAlternatives extends React.Component {
         {alternatives
           && alternatives.map((curr, id) => (
             <button
-              onClick={ this.calculateScore }
+              onClick={ this.selectAnswer }
               data-testid={
-                curr === correct ? 'correct-answer' : this.getIncorrectId(curr)
+                curr === correct ? CORRECT_ANSWER : this.getIncorrectId(curr)
               }
               className={
-                curr === correct ? 'correct-answer' : 'incorrect-answer'
+                curr === correct ? CORRECT_ANSWER : 'incorrect-answer'
               }
               key={ id }
               type="button"
@@ -65,6 +77,11 @@ class RenderAlternatives extends React.Component {
 RenderAlternatives.propTypes = {
   correct: PropTypes.string.isRequired,
   incorrect: PropTypes.arrayOf(String).isRequired,
+  selectedAnswer: PropTypes.func.isRequired,
 };
 
-export default RenderAlternatives;
+const mapDispatchToProps = (dispatch) => ({
+  selectedAnswer: (target) => dispatch(actionChangeScore(target)),
+});
+
+export default connect(null, mapDispatchToProps)(RenderAlternatives);

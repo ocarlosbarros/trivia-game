@@ -9,6 +9,7 @@ const gameInfo = (state = INITIAL_STATE, { type, answers }) => {
   switch (type) {
   case GET_ANSWERS:
     return { ...state, answers };
+
   default:
     return state;
   }
