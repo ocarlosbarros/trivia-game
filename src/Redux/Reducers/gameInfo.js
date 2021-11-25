@@ -1,6 +1,7 @@
 import { GET_ANSWERS } from '../Actions';
 
 const INITIAL_STATE = {
+  token: '',
   answers: {},
 };
 

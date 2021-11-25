@@ -17,7 +17,8 @@ class Game extends React.Component {
 
   async componentDidMount() {
     const { getAnswers } = this.props;
-    const { token } = await getToken();
+    const token = JSON.parse(localStorage.getItem('token'));
+    console.log(token);
     getAnswers(token);
   }
 
