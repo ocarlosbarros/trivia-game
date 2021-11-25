@@ -33,8 +33,12 @@ class Header extends Component {
   }
 }
 
+Header.defaultProps = {
+  gravatarEmail: '',
+};
+
 Header.propTypes = {
-  gravatarEmail: PropTypes.string.isRequired,
+  gravatarEmail: PropTypes.string,
   name: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
   imagePath: PropTypes.string.isRequired,
