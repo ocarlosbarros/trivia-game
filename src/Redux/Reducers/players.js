@@ -1,4 +1,4 @@
-import { GET_PLAYER, GET_GRAVATAR_IMAGE, LOGIN } from '../../Actions';
+import { GET_PLAYER, GET_GRAVATAR_IMAGE, LOGIN } from '../Actions';
 
 const INITIAL_STATE = {
   name: '',
