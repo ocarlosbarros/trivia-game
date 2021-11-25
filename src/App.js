@@ -1,32 +1,16 @@
 import React from 'react';
-import { Switch, Route } from 'react-router';
-import { Link } from 'react-router-dom';
-import logo from './trivia.png';
+import { Route, Switch } from 'react-router';
 import './App.css';
-import Login from './components/Login';
+import Login from './ReactPages/Login';
+import Game from './ReactPages/Game';
 import Config from './ReactPages/Config';
 
 export default function App() {
   return (
-    <div className="App">
-      <Switch>
-        <Route path="/config" component={ Config } />
-      </Switch>
-      <header className="App-header">
-        <button
-          type="submit"
-          data-testid="btn-settings"
-        >
-          <Link to="config">
-            Configurações
-          </Link>
-        </button>
-        <img src={ logo } className="App-logo" alt="logo" />
-        <p>
-          SUA VEZ
-        </p>
-        <Login />
-      </header>
-    </div>
+    <Switch>
+      <Route exact path="/" component={ Login } />
+      <Route path="/game" component={ Game } />
+      <Route path="/config" component={ Config } />
+    </Switch>
   );
 }
