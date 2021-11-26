@@ -29,7 +29,8 @@ class RenderAlternatives extends React.Component {
   }
 
   colorLogic(alternative) {
-    const { correct, isAnswerChosen } = this.state;
+    const { correct } = this.state;
+    const { isAnswerChosen } = this.props;
     if (isAnswerChosen) {
       return alternative === correct
         ? '3px solid rgb(6, 240, 15)'
