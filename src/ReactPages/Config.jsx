@@ -1,4 +1,5 @@
 import React from 'react';
+import '../css/Config.css';
 
 class Config extends React.Component {
   render() {

@@ -1,4 +1,5 @@
 import React from 'react';
+import '../css/Feedback.css';
 
 class Feedback extends React.Component {
   render() {

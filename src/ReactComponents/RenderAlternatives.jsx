@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Timer from './Timer';
 
 const randomizer = 0.5;
 
@@ -83,6 +84,7 @@ class RenderAlternatives extends React.Component {
               </button>
             ))}
         </div>
+        <Timer />
         { isAnswerChosen && <p>{`Você escolheu ${answerChosen}`}</p> }
       </>
     );

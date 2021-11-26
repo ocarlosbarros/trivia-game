@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { actionGetAnswers } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
+import '../css/Game.css';
 
 class Game extends React.Component {
   constructor() {
