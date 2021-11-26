@@ -104,7 +104,7 @@ class Game extends React.Component {
                 correct={ answers[currentId].correct_answer }
                 incorrect={ answers[currentId].incorrect_answers }
               />
-              { isNextVisible && <button type="button">Próxima</button>}
+              { isNextVisible && <button onClick={ this.nextAnswer } type="button">Próxima</button>}
             </>
           )}
         </div>

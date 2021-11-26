@@ -16,7 +16,7 @@ class RenderAlternatives extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentDidUpdate() {
     const { correct, incorrect } = this.props;
     const formatAlternatives = [correct, ...incorrect];
     this.shuffle(formatAlternatives);
@@ -54,8 +54,8 @@ class RenderAlternatives extends React.Component {
     return (
       <>
         <div className="quiz__alternatives">
-          {alternatives
-            && alternatives.map((curr, id) => (
+          {
+            alternatives && alternatives.map((curr, id) => (
               <button
                 style={ { border: this.colorLogic(curr) } }
                 disabled={ isDisabled }
@@ -70,7 +70,8 @@ class RenderAlternatives extends React.Component {
               >
                 {curr}
               </button>
-            ))}
+            ))
+          }
         </div>
         { isAnswerChosen && <p>{`Você escolheu ${answerChosen}`}</p> }
       </>
