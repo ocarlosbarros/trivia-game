@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import thunk from 'redux-thunk';
 import { actionGetAnswers } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
@@ -18,23 +19,19 @@ class Game extends React.Component {
       isDisabled: false,
       isAnswerChosen: false,
       answerChosen: '',
+      isNextVisible: false,
     };
+    this.startTimer = this.startTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
     this.verifyAnswer = this.verifyAnswer.bind(this);
+    this.nextAnswer = this.nextAnswer.bind(this);
   }
 
   async componentDidMount() {
     const { getAnswers } = this.props;
     const token = JSON.parse(localStorage.getItem('token'));
     getAnswers(token);
-
-    // Timer
-    const SECOND = 1000;
-    this.timer = setInterval(() => {
-      this.setState((prevState) => ({
-        seconds: prevState.seconds - 1,
-      }));
-    }, SECOND);
+    this.startTimer();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -42,12 +39,33 @@ class Game extends React.Component {
     const FINAL = 0;
     const isFinal = (seconds === FINAL);
     if (isFinal) {
+      this.nextAnswer();
       this.resetTimer();
     }
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
+  }
+
+  nextAnswer() {
+    const { answers } = this.props;
+    const { currentId } = this.state;
+    if (currentId < answers.length) {
+      this.setState((prevState) => ({
+        currentId: prevState.currentId + 1,
+      }));
+    }
+  }
+
+  startTimer() {
+    // Timer
+    const SECOND = 1000;
+    this.timer = setInterval(() => {
+      this.setState((prevState) => ({
+        seconds: prevState.seconds - 1,
+      }));
+    }, SECOND);
   }
 
   resetTimer() {
@@ -62,13 +80,14 @@ class Game extends React.Component {
       isDisabled: true,
       isAnswerChosen: true,
       answerChosen: target.innerHTML,
-
     });
+    this.setState({ isNextVisible: true });
+    clearInterval(this.timer);
   }
 
   render() {
     const { answers } = this.props;
-    const { currentId, seconds, isDisabled, isAnswerChosen, answerChosen } = this.state;
+    const { currentId, seconds, isDisabled, isAnswerChosen, answerChosen, isNextVisible } = this.state;
     return (
       <>
         <Header />
@@ -85,6 +104,7 @@ class Game extends React.Component {
                 correct={ answers[currentId].correct_answer }
                 incorrect={ answers[currentId].incorrect_answers }
               />
+              { isNextVisible && <button type="button">Próxima</button>}
             </>
           )}
         </div>
