@@ -6,15 +6,19 @@ import Game from './ReactPages/Game';
 import Config from './ReactPages/Config';
 import Feedback from './ReactPages/Feedback';
 import Ranking from './ReactPages/Ranking';
+import Timer from './ReactComponents/Timer';
 
 export default function App() {
   return (
-    <Switch>
-      <Route exact path="/" component={ Login } />
-      <Route path="/game" component={ Game } />
-      <Route path="/config" component={ Config } />
-      <Route path="/feedback" component={ Feedback } />
-      <Route path="/ranking" component={ Ranking } />
-    </Switch>
+    <div>
+      <Switch>
+        <Route exact path="/" component={ Login } />
+        <Route path="/game" component={ Game } />
+        <Route path="/config" component={ Config } />
+        <Route path="/feedback" component={ Feedback } />
+        <Route path="/ranking" component={ Ranking } />
+      </Switch>
+      <Timer />
+    </div>
   );
 }
