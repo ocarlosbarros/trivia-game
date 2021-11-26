@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { actionChangeScore } from '../Redux/Actions';
+import { actionChangeAssertions, actionChangeScore } from '../Redux/Actions';
 
 const randomizer = 0.5;
 const CORRECT_ANSWER = 'correct_answer';
@@ -35,10 +35,6 @@ class RenderAlternatives extends React.Component {
     return `wrong-answer-${id}`;
   }
 
-  calculateScore() {
-
-  }
-
   getAssignedWeight(difficulty) {
     const assignedWeight = {
       hard: 3,
@@ -60,7 +56,7 @@ class RenderAlternatives extends React.Component {
   }
 
   selectAnswer({ target }) {
-    const { setAssertion, answersList } = this.props;
+    const { setAssertion, answersList, setScore } = this.props;
     const selectedAnswer = target.innerText;
     const assertion = target.className === CORRECT_ANSWER ? 1 : 0;
     setAssertion(assertion);
@@ -68,9 +64,8 @@ class RenderAlternatives extends React.Component {
     const assignedWeight = this.getAssignedWeight(difficulty);
     this.endTimer();
     const { timer } = this.state;
-    console.log(timer);
-    const score = TEN_POINTS + (TEN_POINTS + assignedWeight);
-    return score;
+    const score = TEN_POINTS + (timer * assignedWeight);
+    setScore(score);
   }
 
   startTimer() {
@@ -114,10 +109,13 @@ RenderAlternatives.propTypes = {
   correct: PropTypes.string.isRequired,
   incorrect: PropTypes.arrayOf(String).isRequired,
   setAssertion: PropTypes.func.isRequired,
+  setScore: PropTypes.func.isRequired,
+  answersList: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  setAssertion: (target) => dispatch(actionChangeScore(target)),
+  setAssertion: (target) => dispatch(actionChangeAssertions(target)),
+  setScore: (score) => dispatch(actionChangeScore(score)),
 });
 
 export default connect(null, mapDispatchToProps)(RenderAlternatives);

@@ -2,7 +2,6 @@ import fetchGravatarImage from '../../services/fetchGravatarImage';
 import getAnswers from '../../services/getAnswers';
 
 const GET_ANSWERS = 'GET_ANSWERS';
-const CHANGE_SCORE = 'CHANGE_SCORE';
 
 const actionAnswers = (answers) => ({
   type: GET_ANSWERS,
@@ -14,7 +13,13 @@ const actionGetAnswers = (token) => async (dispatch) => {
   dispatch(actionAnswers(answers));
 };
 
-const actionChangeScore = (increment) => ({ type: CHANGE_SCORE, payload: increment });
+const CHANGE_ASSERTIONS = 'CHANGE_ASSERTIONS';
+const CHANGE_SCORE = 'CHANGE_SCORE';
+
+const actionChangeAssertions = (increment) => (
+  { type: CHANGE_SCORE, payload: increment });
+
+const actionChangeScore = (score) => ({ type: CHANGE_SCORE, payload: score });
 
 const GET_PLAYER = 'GET_PLAYER';
 const GET_GRAVATAR_IMAGE = 'GET_GRAVATAR_IMAGE';
@@ -44,6 +49,8 @@ export {
   actionGetAnswers,
   GET_ANSWERS,
   actionAnswers,
+  CHANGE_ASSERTIONS,
+  actionChangeAssertions,
   CHANGE_SCORE,
   actionChangeScore,
 };
