@@ -5,7 +5,7 @@ import { actionChangeScore } from '../Redux/Actions';
 
 const randomizer = 0.5;
 const CORRECT_ANSWER = 'correct_answer';
-
+const TEN_POINTS = 10;
 class RenderAlternatives extends React.Component {
   constructor(props) {
     super(props);
@@ -15,6 +15,7 @@ class RenderAlternatives extends React.Component {
       alternatives: [],
       correct: props.correct,
       incorrect: props.incorrect,
+      timer: 30,
     };
 
     this.selectAnswer = this.selectAnswer.bind(this);
@@ -25,12 +26,17 @@ class RenderAlternatives extends React.Component {
     const { correct, incorrect } = this.props;
     const formatAlternatives = [correct, ...incorrect];
     this.shuffle(formatAlternatives);
+    this.startTimer();
   }
 
   getIncorrectId(currIncorrectAnswer) {
     const { incorrect } = this.state;
     const id = incorrect.indexOf(currIncorrectAnswer);
     return `wrong-answer-${id}`;
+  }
+
+  calculateScore() {
+
   }
 
   getAssignedWeight(difficulty) {
@@ -60,7 +66,23 @@ class RenderAlternatives extends React.Component {
     setAssertion(assertion);
     const difficulty = this.getDifficultyAnswer(selectedAnswer, answersList);
     const assignedWeight = this.getAssignedWeight(difficulty);
-    console.log(teste, teste_2);
+    this.endTimer();
+    const { timer } = this.state;
+    console.log(timer);
+    const score = TEN_POINTS + (TEN_POINTS + assignedWeight);
+    return score;
+  }
+
+  startTimer() {
+    const ONE_SECOND = 1;
+    const ONE_MILLISECONDS = 1000;
+    this.TIMER = setInterval(() => {
+      this.setState((prevState) => ({ timer: prevState.timer - ONE_SECOND }));
+    }, ONE_MILLISECONDS);
+  }
+
+  endTimer() {
+    clearInterval(this.TIMER);
   }
 
   render() {
