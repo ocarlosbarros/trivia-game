@@ -17,7 +17,7 @@ const CHANGE_ASSERTIONS = 'CHANGE_ASSERTIONS';
 const CHANGE_SCORE = 'CHANGE_SCORE';
 
 const actionChangeAssertions = (increment) => (
-  { type: CHANGE_SCORE, payload: increment });
+  { type: CHANGE_ASSERTIONS, payload: increment });
 
 const actionChangeScore = (score) => ({ type: CHANGE_SCORE, payload: score });
 
