@@ -16,8 +16,10 @@ class RenderAlternatives extends React.Component {
     };
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     const { correct, incorrect } = this.props;
+    console.log(correct);
+    console.log(incorrect);
     const formatAlternatives = [correct, ...incorrect];
     this.shuffle(formatAlternatives);
   }
@@ -46,8 +48,12 @@ class RenderAlternatives extends React.Component {
   render() {
     const {
       alternatives,
-      correct,
+      // correct,
     } = this.state;
+
+    const { correct, incorrect } = this.props;
+    console.log(correct);
+    console.log(incorrect);
 
     const { onClick, isAnswerChosen,
       answerChosen, isDisabled } = this.props;
