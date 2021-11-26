@@ -16,8 +16,11 @@ class Game extends React.Component {
       correct: 0,
       incorrect: 0,
       isDisabled: false,
+      isAnswerChosen: false,
+      answerChosen: '',
     };
     this.resetTimer = this.resetTimer.bind(this);
+    this.verifyAnswer = this.verifyAnswer.bind(this);
   }
 
   async componentDidMount() {
@@ -54,9 +57,18 @@ class Game extends React.Component {
     }));
   }
 
+  verifyAnswer({ target }) {
+    this.setState({
+      isDisabled: true,
+      isAnswerChosen: true,
+      answerChosen: target.innerHTML,
+
+    });
+  }
+
   render() {
     const { answers } = this.props;
-    const { currentId, seconds } = this.state;
+    const { currentId, seconds, isDisabled, isAnswerChosen, answerChosen } = this.state;
     return (
       <>
         <Header />
@@ -66,6 +78,10 @@ class Game extends React.Component {
               <p data-testid="question-category">{answers[currentId].category}</p>
               <p data-testid="question-text">{answers[currentId].question}</p>
               <RenderAlternatives
+                onClick={ this.verifyAnswer }
+                disabled={ isDisabled }
+                isAnswerChosen={ isAnswerChosen }
+                answerChosen={ answerChosen }
                 correct={ answers[currentId].correct_answer }
                 incorrect={ answers[currentId].incorrect_answers }
               />

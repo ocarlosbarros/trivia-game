@@ -7,16 +7,12 @@ class RenderAlternatives extends React.Component {
   constructor(props) {
     super(props);
     this.shuffle = this.shuffle.bind(this);
-    this.verifyAnswer = this.verifyAnswer.bind(this);
     this.colorLogic = this.colorLogic.bind(this);
 
     this.state = {
       alternatives: [],
       correct: props.correct,
       incorrect: props.incorrect,
-      isButtonDisabled: false,
-      isAnswerChosen: false,
-      answerChosen: '',
     };
   }
 
@@ -30,14 +26,6 @@ class RenderAlternatives extends React.Component {
     const { incorrect } = this.state;
     const id = incorrect.indexOf(currIncorrectAnswer);
     return `wrong-answer-${id}`;
-  }
-
-  verifyAnswer(answer) {
-    this.setState({
-      isButtonDisabled: true,
-      isAnswerChosen: true,
-      answerChosen: answer,
-    });
   }
 
   colorLogic(alternative) {
@@ -58,10 +46,10 @@ class RenderAlternatives extends React.Component {
     const {
       alternatives,
       correct,
-      isButtonDisabled,
-      isAnswerChosen,
-      answerChosen,
     } = this.state;
+
+    const { onClick, isAnswerChosen,
+      answerChosen, isDisabled } = this.props;
     return (
       <>
         <div className="quiz__alternatives">
@@ -69,8 +57,8 @@ class RenderAlternatives extends React.Component {
             && alternatives.map((curr, id) => (
               <button
                 style={ { border: this.colorLogic(curr) } }
-                disabled={ isButtonDisabled }
-                onClick={ () => this.verifyAnswer(curr) }
+                disabled={ isDisabled }
+                onClick={ onClick }
                 data-testid={
                   curr === correct
                     ? 'correct-answer'
@@ -90,8 +78,12 @@ class RenderAlternatives extends React.Component {
 }
 
 RenderAlternatives.propTypes = {
+  answerChosen: PropTypes.string.isRequired,
   correct: PropTypes.string.isRequired,
-  incorrect: PropTypes.arrayOf(String).isRequired,
+  incorrect: PropTypes.string.isRequired,
+  isAnswerChosen: PropTypes.bool.isRequired,
+  isDisabled: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default RenderAlternatives;
