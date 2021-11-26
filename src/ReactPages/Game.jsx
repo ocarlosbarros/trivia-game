@@ -13,7 +13,7 @@ class Game extends React.Component {
 
     this.state = {
       currentId: 0,
-      seconds: 30,
+      seconds: 5,
       correct: 0,
       incorrect: 0,
       isDisabled: false,
@@ -51,7 +51,9 @@ class Game extends React.Component {
   nextAnswer() {
     const { answers } = this.props;
     const { currentId } = this.state;
-    if (currentId < answers.length) {
+    if (currentId < (answers.length - 1)) {
+      console.log(currentId);
+      console.log(answers.length);
       this.setState((prevState) => ({
         currentId: prevState.currentId + 1,
       }));
@@ -70,7 +72,7 @@ class Game extends React.Component {
 
   resetTimer() {
     this.setState((prevState) => ({
-      seconds: 30,
+      seconds: 5,
       incorrect: prevState.incorrect - 1,
     }));
   }
