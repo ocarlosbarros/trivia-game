@@ -6,7 +6,6 @@ import Game from './ReactPages/Game';
 import Config from './ReactPages/Config';
 import Feedback from './ReactPages/Feedback';
 import Ranking from './ReactPages/Ranking';
-import Timer from './ReactComponents/Timer';
 
 export default function App() {
   return (
@@ -18,7 +17,6 @@ export default function App() {
         <Route path="/feedback" component={ Feedback } />
         <Route path="/ranking" component={ Ranking } />
       </Switch>
-      <Timer />
     </div>
   );
 }

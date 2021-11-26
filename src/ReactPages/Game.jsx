@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { actionGetAnswers } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
+import Timer from '../ReactComponents/Timer';
 
 class Game extends React.Component {
   constructor() {
@@ -11,19 +12,51 @@ class Game extends React.Component {
 
     this.state = {
       currentId: 0,
+      seconds: 30,
+      correct: 0,
+      incorrect: 0,
+      isDisabled: false,
     };
+    this.resetTimer = this.resetTimer.bind(this);
   }
 
   async componentDidMount() {
     const { getAnswers } = this.props;
     const token = JSON.parse(localStorage.getItem('token'));
-    console.log(token);
     getAnswers(token);
+
+    // Timer
+    const SECOND = 1000;
+    this.timer = setInterval(() => {
+      this.setState((prevState) => ({
+        seconds: prevState.seconds - 1,
+      }));
+    }, SECOND);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { seconds } = prevState;
+    const FINAL = 0;
+    const isFinal = (seconds === FINAL);
+    if (isFinal) {
+      this.resetTimer();
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+  resetTimer() {
+    this.setState((prevState) => ({
+      seconds: 30,
+      incorrect: prevState.incorrect - 1,
+    }));
   }
 
   render() {
     const { answers } = this.props;
-    const { currentId } = this.state;
+    const { currentId, seconds } = this.state;
     return (
       <>
         <Header />
@@ -39,6 +72,7 @@ class Game extends React.Component {
             </>
           )}
         </div>
+        <Timer seconds={ seconds } />
       </>
     );
   }
