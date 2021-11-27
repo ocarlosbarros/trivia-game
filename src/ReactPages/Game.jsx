@@ -26,21 +26,27 @@ class Game extends React.Component {
     const { answers } = this.props;
     const { currentId } = this.state;
     return (
-      <>
+      <main className="game-section">
         <Header />
         <div className="quiz">
           {answers && (
             <>
-              <p data-testid="question-category">{answers[currentId].category}</p>
-              <p data-testid="question-text">{answers[currentId].question}</p>
-              <RenderAlternatives
-                correct={ answers[currentId].correct_answer }
-                incorrect={ answers[currentId].incorrect_answers }
-              />
+              <p className="quiz__category" data-testid="question-category">
+                {answers[currentId].category}
+              </p>
+              <div className="question__box">
+                <p className="question__text" data-testid="question-text">
+                  {answers[currentId].question}
+                </p>
+                <RenderAlternatives
+                  correct={ answers[currentId].correct_answer }
+                  incorrect={ answers[currentId].incorrect_answers }
+                />
+              </div>
             </>
           )}
         </div>
-      </>
+      </main>
     );
   }
 }

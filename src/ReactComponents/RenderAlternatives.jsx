@@ -69,6 +69,7 @@ class RenderAlternatives extends React.Component {
           {alternatives
             && alternatives.map((curr, id) => (
               <button
+                className="quiz__alternative"
                 style={ { border: this.colorLogic(curr) } }
                 disabled={ isButtonDisabled }
                 onClick={ () => this.verifyAnswer(curr) }

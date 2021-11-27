@@ -1,6 +1,7 @@
 .login-page {
   align-items: center;
-  background-image: linear-gradient(to right top, rgb(155, 153, 153), rgb(224, 222, 222));
+  background-image: url('../img/stacked-waves-haikei.svg');
+  background-size: cover;
   display: flex;
   flex-direction: column;
   height: 93vh;
@@ -15,12 +16,12 @@
   font-size: 2rem;
   position: absolute;
   right: 5%;
-  top: 5%;
+  top: 7%;
 }
 
 .config-icon {
   animation: moveInRight 0.5s ease-in;
-  fill: black;
+  fill: rgba(0, 0, 0, 0.6);
   height: 3rem;
   width: 3rem;
 }
@@ -28,7 +29,7 @@
 .form {
   align-items: center;
   animation: moveInBottom 0.5s ease-out;
-  background-image: linear-gradient(to right bottom, #050505, #484949);
+  background-image: linear-gradient(to right bottom, #05050599, #48494999);
   border-radius: 7px;
   display: flex;
   flex-direction: column;
@@ -45,34 +46,34 @@
 }
 
 .form__input {
-  background-color: gray;
+  background-color: rgba(255, 255, 255, 0.856);
   border: none;
-  border-bottom: 1px solid white;
-  border-radius: 100px;
-  box-shadow: 0 1rem 4rem rgb(255, 255, 255, 0.1);
+  border-radius: 10px;
   margin-bottom: 1rem;
   padding: 1rem 2rem;
   transition: all 0.5s;
 }
 
 .form__input:focus-visible {
+  background-color: rgba(255, 255, 255, 0.6);
   outline: none;
   transform: scaleX(110%);
 }
 
 .form__btn-disabled {
-  background-color: rgb(141, 3, 3);
+  background-color: rgb(255, 255, 255, 0.3);
   border: none;
-  border-radius: 100px;
+  border-radius: 5px;
   color: white;
+  cursor: not-allowed;
   margin-top: 3rem;
   padding: 1rem 2rem;
 }
 
 .form__btn {
-  background-color: #0ab118;
+  background-color: var(--color-green-dark);
   border: none;
-  border-radius: 100px;
+  border-radius: 5px;
   color: white;
   cursor: pointer;
   margin-top: 3rem;
@@ -93,7 +94,7 @@
 .heading-primary {
   animation: moveInTop 0.5s;
   background-clip: text;
-  background-image: linear-gradient(to right bottom, #025338, #02e015);
+  background-image: linear-gradient(to right bottom, #02533883, #02e015);
   color: transparent;
   font-size: 5rem;
   letter-spacing: 10px;

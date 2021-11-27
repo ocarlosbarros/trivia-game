@@ -1,0 +1,78 @@
+.game-section {
+  background-image: url('../img/stacked-waves-haikei.svg');
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  height: 93vh;
+  justify-content: flex-start;
+  margin: 3rem;
+}
+
+.quiz {
+  animation: moveInLeft 0.5s ease-in;
+  background-image: linear-gradient(to right bottom, #05050599, #48494999);
+  border-radius: 10px;
+  box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  height: 550px;
+  margin: auto 4rem;
+  padding: 2rem 3rem;
+  width: 400px;
+}
+
+.quiz__category {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.514);
+  color: white;
+  display: block;
+  font-size: 3rem;
+  letter-spacing: -1px;
+  margin-bottom: 7rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.question__box {
+  background-color: rgb(255, 255, 255, 0.1);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+}
+
+.question__text {
+  color: white;
+  font-size: 1.4rem;
+  margin: 1rem 5rem;
+  text-align: center;
+}
+
+.quiz__alternatives {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 2rem;
+}
+
+.quiz__alternative {
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.quiz__alternative:hover {
+  background-color: white;
+}
+
+@keyframes moveInLeft {
+
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

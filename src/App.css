@@ -1,3 +1,14 @@
+:root {
+
+  --main-color-primary: #d3f9d8;
+
+  --main-color-secondary: #b2f2bb;
+
+  --main-color-tertiary: #8ce99a;
+
+  --color-green-dark: #37b24d;
+}
+
 * {
   box-sizing: inherit;
   margin: 0;
