@@ -31,9 +31,9 @@ class Game extends React.Component {
         <div className="quiz">
           {answers && (
             <>
-              <p className="quiz__category" data-testid="question-category">
+              <h2 className="heading-secondary" data-testid="question-category">
                 {answers[currentId].category}
-              </p>
+              </h2>
               <div className="question__box">
                 <p className="question__text" data-testid="question-text">
                   {answers[currentId].question}

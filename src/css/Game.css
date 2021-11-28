@@ -10,7 +10,7 @@
 
 .quiz {
   animation: moveInLeft 0.5s ease-in;
-  background-image: linear-gradient(to right bottom, #05050599, #48494999);
+  background-image: linear-gradient(to right bottom, rgba(255, 255, 255, 0.6), #fafafa99);
   border-radius: 10px;
   box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.3);
   display: flex;
@@ -41,7 +41,7 @@
 }
 
 .question__text {
-  color: white;
+  color: #02533883;
   font-size: 1.4rem;
   margin: 1rem 5rem;
   text-align: center;
@@ -54,6 +54,7 @@
 }
 
 .quiz__alternative {
+  background-color: white;
   border: none;
   border-radius: 5px;
   margin-bottom: 1rem;
@@ -61,7 +62,33 @@
 }
 
 .quiz__alternative:hover {
-  background-color: white;
+  background-color: #02e0159f;
+}
+
+.heading-secondary {
+  animation: moveInTop 0.2s;
+  background-clip: text;
+  background-image: linear-gradient(to right bottom, #02533883, #02e015);
+  border-bottom: 1px solid rgba(117, 117, 117, 0.514);
+  color: transparent;
+  font-size: 3rem;
+  letter-spacing: 1px;
+  margin-bottom: 5rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+@keyframes moveInTop {
+
+  0% {
+    opacity: 0;
+    transform: translateY(-300px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes moveInLeft {

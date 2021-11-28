@@ -1,6 +1,6 @@
 .header {
   align-items: center;
-  background-image: linear-gradient(to right bottom, #05050518, #484949);
+  background-image: linear-gradient(to right bottom, rgba(255, 255, 255, 0.6), #fafafa99);
   box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.15);
   display: flex;
   font-size: 1.6rem;

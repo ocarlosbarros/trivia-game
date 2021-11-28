@@ -29,7 +29,7 @@
 .form {
   align-items: center;
   animation: moveInBottom 0.5s ease-out;
-  background-image: linear-gradient(to right bottom, #05050599, #48494999);
+  background-image: linear-gradient(to right bottom, rgba(255, 255, 255, 0.6), #fafafa99);
   border-radius: 7px;
   display: flex;
   flex-direction: column;
@@ -39,16 +39,18 @@
 }
 
 .form__label {
-  color: white;
+  color: #01b610;
   font-size: 1.4rem;
   margin-bottom: 3px;
   margin-top: 2rem;
 }
 
 .form__input {
-  background-color: rgba(255, 255, 255, 0.856);
+  background-color: rgba(241, 239, 239, 0.856);
   border: none;
   border-radius: 10px;
+  font-family: inherit;
+  font-size: 1.4rem;
   margin-bottom: 1rem;
   padding: 1rem 2rem;
   transition: all 0.5s;
@@ -61,13 +63,13 @@
 }
 
 .form__btn-disabled {
-  background-color: rgb(255, 255, 255, 0.3);
+  background-color: rgba(110, 110, 110, 0.3);
   border: none;
   border-radius: 5px;
   color: white;
   cursor: not-allowed;
   margin-top: 3rem;
-  padding: 1rem 2rem;
+  padding: 1rem 9rem;
 }
 
 .form__btn {
@@ -77,7 +79,7 @@
   color: white;
   cursor: pointer;
   margin-top: 3rem;
-  padding: 1rem 2rem;
+  padding: 1rem 9rem;
   transition: all 0.2s;
 }
 
