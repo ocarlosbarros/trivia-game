@@ -1,37 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Timer from './Timer';
-
-const randomizer = 0.5;
 
 class RenderAlternatives extends React.Component {
   constructor(props) {
     super(props);
-    this.shuffle = this.shuffle.bind(this);
     this.colorLogic = this.colorLogic.bind(this);
-
-    this.state = {
-      alternatives: [],
-      correct: props.correct,
-      incorrect: props.incorrect,
-    };
-  }
-
-  componentDidUpdate() {
-    const { correct, incorrect } = this.props;
-    const formatAlternatives = [correct, ...incorrect];
-    this.shuffle(formatAlternatives);
   }
 
   getIncorrectId(currIncorrectAnswer) {
-    const { incorrect } = this.state;
+    const { incorrect } = this.props;
     const id = incorrect.indexOf(currIncorrectAnswer);
     return `wrong-answer-${id}`;
   }
 
   colorLogic(alternative) {
-    const { correct } = this.state;
-    const { isAnswerChosen } = this.props;
+    const { isAnswerChosen, correct } = this.props;
     if (isAnswerChosen) {
       return alternative === correct
         ? '3px solid rgb(6, 240, 15)'
@@ -39,19 +22,11 @@ class RenderAlternatives extends React.Component {
     }
   }
 
-  shuffle(alt) {
-    const alternatives = alt.sort(() => Math.random() - randomizer);
-    this.setState({ alternatives });
-  }
-
   render() {
-    const {
-      alternatives,
-      correct,
-    } = this.state;
-
-    const { onClick, isAnswerChosen,
-      answerChosen, isDisabled } = this.props;
+    const { onClick, isAnswerChosen, answerChosen,
+      disabled, correct, incorrect } = this.props;
+    const alternatives = [correct, ...incorrect];
+    console.log(disabled);
     return (
       <>
         <div className="quiz__alternatives">
@@ -60,7 +35,7 @@ class RenderAlternatives extends React.Component {
               <button
                 className="quiz__alternative"
                 style={ { border: this.colorLogic(curr) } }
-                disabled={ isDisabled }
+                disabled={ disabled }
                 onClick={ onClick }
                 data-testid={
                   curr === correct
@@ -75,7 +50,6 @@ class RenderAlternatives extends React.Component {
             ))
           }
         </div>
-        <Timer />
         { isAnswerChosen && <p>{`Você escolheu ${answerChosen}`}</p> }
       </>
     );
@@ -83,11 +57,14 @@ class RenderAlternatives extends React.Component {
 }
 
 RenderAlternatives.propTypes = {
+  alternatives: PropTypes.shape({
+    map: PropTypes.func,
+  }).isRequired,
   answerChosen: PropTypes.string.isRequired,
   correct: PropTypes.string.isRequired,
   incorrect: PropTypes.string.isRequired,
   isAnswerChosen: PropTypes.bool.isRequired,
-  isDisabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 

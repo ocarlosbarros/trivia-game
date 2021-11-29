@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import { actionGetAnswers } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
+import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
 
+const randomizer = 0.5;
 class Game extends React.Component {
   constructor() {
     super();
@@ -13,33 +15,44 @@ class Game extends React.Component {
     this.state = {
       currentId: 0,
       seconds: 30,
-      correct: 0,
-      incorrect: 0,
+      /* correct: '', */
+      incorrect: [],
       isDisabled: false,
       isAnswerChosen: false,
       answerChosen: '',
       isNextVisible: false,
+      alternatives: [],
     };
     this.startTimer = this.startTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
     this.verifyAnswer = this.verifyAnswer.bind(this);
     this.nextAnswer = this.nextAnswer.bind(this);
+    this.shuffle = this.shuffle.bind(this);
+    this.showCorrectAnswer = this.showCorrectAnswer.bind(this);
   }
 
   async componentDidMount() {
     const { getAnswers } = this.props;
     const token = JSON.parse(localStorage.getItem('token'));
-    getAnswers(token);
+    await getAnswers(token);
     this.startTimer();
+    /*  const { correct, incorrect } = this.state;
+    console.log(incorrect);
+    const formatAlternatives = [correct, ...incorrect];
+    console.log('form', formatAlternatives);
+    this.shuffle(formatAlternatives); */
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const { seconds } = prevState;
     const FINAL = 0;
-    const isFinal = (seconds === FINAL);
+    const isFinal = seconds === FINAL;
     if (isFinal) {
-      this.nextAnswer();
+      this.showCorrectAnswer();
       this.resetTimer();
+      // setTimeout(() => {
+      //   this.nextAnswer();
+      // }, ONE_SECOND);
     }
   }
 
@@ -47,12 +60,22 @@ class Game extends React.Component {
     clearInterval(this.timer);
   }
 
+  showCorrectAnswer() {
+    this.setState({ isAnswerChosen: true, isNextVisible: true, isDisabled: true });
+  }
+
+  shuffle(alt) {
+    const alternatives = alt.sort(() => Math.random() - randomizer);
+    this.setState({ alternatives });
+  }
+
   nextAnswer() {
     const { answers } = this.props;
     const { currentId } = this.state;
-    if (currentId < answers.length) {
+    if (currentId < answers.length - 1) {
       this.setState((prevState) => ({
         currentId: prevState.currentId + 1,
+        isAnswerChosen: false,
       }));
     }
   }
@@ -86,7 +109,9 @@ class Game extends React.Component {
 
   render() {
     const { answers } = this.props;
-    const { currentId, seconds, isDisabled, isAnswerChosen, answerChosen, isNextVisible } = this.state;
+    const { currentId, seconds, isDisabled, isAnswerChosen,
+      answerChosen, isNextVisible, alternatives,
+    } = this.state;
     return (
       <main className="game-section">
         <Header />
@@ -97,17 +122,33 @@ class Game extends React.Component {
                 {answers[currentId].category}
               </h2>
               <div className="question__box">
-                <p className="question__text" data-testid="question-text">
+                <p
+                  className="question__text"
+                  data-testid="question-text"
+                >
                   {answers[currentId].question}
                 </p>
                 <RenderAlternatives
+                  alternatives={ alternatives }
+                  currentId={ currentId }
+                  onClick={ this.verifyAnswer }
+                  disabled={ isDisabled }
+                  isAnswerChosen={ isAnswerChosen }
+                  answerChosen={ answerChosen }
                   correct={ answers[currentId].correct_answer }
                   incorrect={ answers[currentId].incorrect_answers }
+                  shuffle={ this.shuffle }
                 />
               </div>
+              {isNextVisible && (
+                <button onClick={ this.nextAnswer } type="button">
+                  Próxima
+                </button>
+              )}
             </>
           )}
         </div>
+        { !isAnswerChosen && <Timer seconds={ seconds } /> }
       </main>
     );
   }
@@ -122,8 +163,10 @@ const mapStateToProps = ({ gameInfo }) => ({
 });
 
 Game.propTypes = {
+  answers: PropTypes.arrayOf().isRequired,
+  // correct: PropTypes.number.isRequired,
+  // incorrect: PropTypes.number.isRequired,
   getAnswers: PropTypes.func.isRequired,
-  answers: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToPros)(Game);
