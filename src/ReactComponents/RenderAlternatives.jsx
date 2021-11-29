@@ -25,11 +25,9 @@ class RenderAlternatives extends React.Component {
 
   render() {
     const { onClick, isAnswerChosen, answerChosen,
-      isDisabled, correct, incorrect, alternatives } = this.props;
-    console.log('correct', correct);
-    console.log('incorrect', incorrect);
-    console.log('al', alternatives);
-
+      disabled, correct, incorrect } = this.props;
+    const alternatives = [correct, ...incorrect];
+    console.log(disabled);
     return (
       <>
         <div className="quiz__alternatives">
@@ -38,7 +36,7 @@ class RenderAlternatives extends React.Component {
               <button
                 className="quiz__alternative"
                 style={ { border: this.colorLogic(curr) } }
-                disabled={ isDisabled }
+                disabled={ disabled }
                 onClick={ onClick }
                 data-testid={
                   curr === correct

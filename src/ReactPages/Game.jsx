@@ -8,7 +8,7 @@ import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
 
 const randomizer = 0.5;
-
+const ONE_SECOND = 2000;
 class Game extends React.Component {
   constructor() {
     super();
@@ -29,6 +29,7 @@ class Game extends React.Component {
     this.verifyAnswer = this.verifyAnswer.bind(this);
     this.nextAnswer = this.nextAnswer.bind(this);
     this.shuffle = this.shuffle.bind(this);
+    this.showCorrectAnswer = this.showCorrectAnswer.bind(this);
   }
 
   async componentDidMount() {
@@ -43,18 +44,25 @@ class Game extends React.Component {
     this.shuffle(formatAlternatives); */
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const { seconds } = prevState;
     const FINAL = 0;
     const isFinal = seconds === FINAL;
     if (isFinal) {
-      this.nextAnswer();
+      this.showCorrectAnswer();
       this.resetTimer();
+      // setTimeout(() => {
+      //   this.nextAnswer();
+      // }, ONE_SECOND);
     }
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
+  }
+
+  showCorrectAnswer() {
+    this.setState({ isAnswerChosen: true, isNextVisible: true, isDisabled: true });
   }
 
   shuffle(alt) {
@@ -68,6 +76,7 @@ class Game extends React.Component {
     if (currentId < answers.length - 1) {
       this.setState((prevState) => ({
         currentId: prevState.currentId + 1,
+        isAnswerChosen: false,
       }));
     }
   }
