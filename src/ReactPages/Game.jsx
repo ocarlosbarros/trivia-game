@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import thunk from 'redux-thunk';
 import { actionGetAnswers } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
+import '../css/Game.css';
 import Timer from '../ReactComponents/Timer';
 
 class Game extends React.Component {
@@ -89,7 +89,7 @@ class Game extends React.Component {
     const { answers } = this.props;
     const { currentId, seconds, isDisabled, isAnswerChosen, answerChosen, isNextVisible } = this.state;
     return (
-      <>
+      <main className="game-section">
         <Header />
         <div className="quiz">
           {answers && (
@@ -109,7 +109,7 @@ class Game extends React.Component {
           )}
         </div>
         <Timer seconds={ seconds } />
-      </>
+      </main>
     );
   }
 }

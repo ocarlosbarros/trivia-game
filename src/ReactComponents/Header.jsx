@@ -15,19 +15,28 @@ class Header extends Component {
     const { name, score, imagePath } = this.props;
     return (
       <header className="header">
-        <div className="player-info">
-          <img data-testid="header-profile-picture" src={ imagePath } alt="" />
-          <p data-testid="header-player-name">
+        <div className="header__box">
+          <img
+            className="header__img"
+            data-testid="header-profile-picture"
+            src={ imagePath }
+            alt=""
+          />
+          <p className="header__id" data-testid="header-player-name">
             Jogador:
             {' '}
-            { name }
+            <span className="header__name">
+              {name}
+            </span>
           </p>
         </div>
-        <p data-testid="header-score">
-          Pontos:
-          {' '}
-          { score }
-        </p>
+        <div className="header__box--score">
+          <p className="header__score" data-testid="header-score">
+            Pontos:
+            {' '}
+            {score}
+          </p>
+        </div>
       </header>
     );
   }
