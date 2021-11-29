@@ -1,19 +1,61 @@
 .header {
   align-items: center;
-  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+  background-image: linear-gradient(to right bottom, rgba(255, 255, 255, 0.6), #fafafa99);
+  box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.15);
   display: flex;
+  font-size: 1.6rem;
   justify-content: space-around;
-  padding: 1em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  width: 100%;
 }
 
-.player-info {
+.header__box {
   align-items: center;
   display: flex;
-  flex-direction: row;
-  flex-grow: 2;
+  margin-right: auto;
+  padding: 1rem 2rem;
+  transition: all 0.1s;
 }
 
-.player-info p {
-  margin-left: 2em;
+.header__box:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
+.header__img {
+  border-radius: 50%;
+  height: 6rem;
+  margin-right: 1rem;
+  max-width: 100%;
+  transition: all 0.2s;
+}
+
+.header__img:hover {
+  filter: brightness(90%) grayscale(30%);
+}
+
+.header__id {
+  background-color: white;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 1rem 2rem;
+}
+
+.header__box--score {
+  display: flex;
+  height: 100%;
+  margin-right: 0.1rem;
+  overflow: hidden;
+  padding: 1rem 2rem;
+}
+
+.header__box--score:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.header__score {
+  align-self: center;
+  background-color: white;
+  border-radius: 5px;
+  padding: 1rem 2rem;
+}

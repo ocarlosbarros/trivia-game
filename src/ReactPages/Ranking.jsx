@@ -1,9 +1,10 @@
 import React from 'react';
+import '../css/Ranking.css';
 
 class Ranking extends React.Component {
   render() {
     return (
-      <div>COMPONENTS DA PAGINA RANKING</div>
+      <div className="ranking-section">COMPONENTS DA PAGINA RANKING</div>
     );
   }
 }
