@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import thunk from 'redux-thunk';
 import { actionGetAnswers } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
+
+const randomizer = 0.5;
 
 class Game extends React.Component {
   constructor() {
@@ -13,25 +14,33 @@ class Game extends React.Component {
 
     this.state = {
       currentId: 0,
-      seconds: 5,
-      correct: 0,
-      incorrect: 0,
+      seconds: 30,
+      correct: '',
+      incorrect: [],
       isDisabled: false,
       isAnswerChosen: false,
       answerChosen: '',
       isNextVisible: false,
+      alternatives: [],
     };
     this.startTimer = this.startTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
     this.verifyAnswer = this.verifyAnswer.bind(this);
     this.nextAnswer = this.nextAnswer.bind(this);
+    this.shuffle = this.shuffle.bind(this);
   }
 
   async componentDidMount() {
     const { getAnswers } = this.props;
     const token = JSON.parse(localStorage.getItem('token'));
-    getAnswers(token);
+    const answers = await getAnswers(token);
     this.startTimer();
+    const { correct, incorrect } = this.state;
+    console.log('ans', answers);
+    console.log(incorrect);
+    const formatAlternatives = [correct, ...incorrect];
+    console.log('form', formatAlternatives);
+    this.shuffle(formatAlternatives);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -48,12 +57,15 @@ class Game extends React.Component {
     clearInterval(this.timer);
   }
 
+  shuffle(alt) {
+    const alternatives = alt.sort(() => Math.random() - randomizer);
+    this.setState({ alternatives });
+  }
+
   nextAnswer() {
     const { answers } = this.props;
     const { currentId } = this.state;
     if (currentId < (answers.length - 1)) {
-      console.log(currentId);
-      console.log(answers.length);
       this.setState((prevState) => ({
         currentId: prevState.currentId + 1,
       }));
@@ -72,7 +84,7 @@ class Game extends React.Component {
 
   resetTimer() {
     this.setState((prevState) => ({
-      seconds: 5,
+      seconds: 30,
       incorrect: prevState.incorrect - 1,
     }));
   }
@@ -89,7 +101,8 @@ class Game extends React.Component {
 
   render() {
     const { answers } = this.props;
-    const { currentId, seconds, isDisabled, isAnswerChosen, answerChosen, isNextVisible } = this.state;
+    const { currentId, seconds, isDisabled,
+      isAnswerChosen, answerChosen, isNextVisible, alternatives } = this.state;
     return (
       <>
         <Header />
@@ -99,6 +112,7 @@ class Game extends React.Component {
               <p data-testid="question-category">{answers[currentId].category}</p>
               <p data-testid="question-text">{answers[currentId].question}</p>
               <RenderAlternatives
+                alternatives={ alternatives }
                 currentId={ currentId }
                 onClick={ this.verifyAnswer }
                 disabled={ isDisabled }
@@ -106,8 +120,10 @@ class Game extends React.Component {
                 answerChosen={ answerChosen }
                 correct={ answers[currentId].correct_answer }
                 incorrect={ answers[currentId].incorrect_answers }
+                shuffle={ this.shuffle }
               />
-              { isNextVisible && <button onClick={ this.nextAnswer } type="button">Próxima</button>}
+              { isNextVisible
+              && <button onClick={ this.nextAnswer } type="button">Próxima</button>}
             </>
           )}
         </div>
@@ -126,8 +142,10 @@ const mapStateToProps = ({ gameInfo }) => ({
 });
 
 Game.propTypes = {
+  answers: PropTypes.arrayOf().isRequired,
+  // correct: PropTypes.number.isRequired,
+  // incorrect: PropTypes.number.isRequired,
   getAnswers: PropTypes.func.isRequired,
-  answers: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToPros)(Game);
