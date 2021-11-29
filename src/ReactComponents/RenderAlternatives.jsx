@@ -1,48 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Timer from './Timer';
-
-const randomizer = 0.5;
 
 class RenderAlternatives extends React.Component {
   constructor(props) {
     super(props);
-    this.shuffle = this.shuffle.bind(this);
-    this.verifyAnswer = this.verifyAnswer.bind(this);
     this.colorLogic = this.colorLogic.bind(this);
-
-    this.state = {
-      alternatives: [],
-      correct: props.correct,
-      incorrect: props.incorrect,
-      isButtonDisabled: false,
-      isAnswerChosen: false,
-      answerChosen: '',
-    };
-  }
-
-  componentDidMount() {
-    const { correct, incorrect } = this.props;
-    const formatAlternatives = [correct, ...incorrect];
-    this.shuffle(formatAlternatives);
   }
 
   getIncorrectId(currIncorrectAnswer) {
-    const { incorrect } = this.state;
+    const { incorrect } = this.props;
     const id = incorrect.indexOf(currIncorrectAnswer);
     return `wrong-answer-${id}`;
   }
 
-  verifyAnswer(answer) {
-    this.setState({
-      isButtonDisabled: true,
-      isAnswerChosen: true,
-      answerChosen: answer,
-    });
-  }
-
   colorLogic(alternative) {
-    const { correct, isAnswerChosen } = this.state;
+    const { isAnswerChosen, correct } = this.props;
     if (isAnswerChosen) {
       return alternative === correct
         ? '3px solid rgb(6, 240, 15)'
@@ -50,29 +22,21 @@ class RenderAlternatives extends React.Component {
     }
   }
 
-  shuffle(alt) {
-    const alternatives = alt.sort(() => Math.random() - randomizer);
-    this.setState({ alternatives });
-  }
-
   render() {
-    const {
-      alternatives,
-      correct,
-      isButtonDisabled,
-      isAnswerChosen,
-      answerChosen,
-    } = this.state;
+    const { onClick, isAnswerChosen, answerChosen,
+      disabled, correct, incorrect } = this.props;
+    const alternatives = [correct, ...incorrect];
+    console.log(disabled);
     return (
       <>
         <div className="quiz__alternatives">
-          {alternatives
-            && alternatives.map((curr, id) => (
+          {
+            alternatives && alternatives.map((curr, id) => (
               <button
                 className="quiz__alternative"
                 style={ { border: this.colorLogic(curr) } }
-                disabled={ isButtonDisabled }
-                onClick={ () => this.verifyAnswer(curr) }
+                disabled={ disabled }
+                onClick={ onClick }
                 data-testid={
                   curr === correct
                     ? 'correct-answer'
@@ -83,9 +47,9 @@ class RenderAlternatives extends React.Component {
               >
                 {curr}
               </button>
-            ))}
+            ))
+          }
         </div>
-        <Timer />
         { isAnswerChosen && <p>{`Você escolheu ${answerChosen}`}</p> }
       </>
     );
@@ -93,8 +57,15 @@ class RenderAlternatives extends React.Component {
 }
 
 RenderAlternatives.propTypes = {
+  alternatives: PropTypes.shape({
+    map: PropTypes.func,
+  }).isRequired,
+  answerChosen: PropTypes.string.isRequired,
   correct: PropTypes.string.isRequired,
-  incorrect: PropTypes.arrayOf(String).isRequired,
+  incorrect: PropTypes.string.isRequired,
+  isAnswerChosen: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default RenderAlternatives;
