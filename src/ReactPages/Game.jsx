@@ -8,7 +8,6 @@ import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
 
 const randomizer = 0.5;
-const ONE_SECOND = 2000;
 class Game extends React.Component {
   constructor() {
     super();
@@ -16,7 +15,7 @@ class Game extends React.Component {
     this.state = {
       currentId: 0,
       seconds: 30,
-      correct: '',
+      /* correct: '', */
       incorrect: [],
       isDisabled: false,
       isAnswerChosen: false,
@@ -110,14 +109,8 @@ class Game extends React.Component {
 
   render() {
     const { answers } = this.props;
-    const {
-      currentId,
-      seconds,
-      isDisabled,
-      isAnswerChosen,
-      answerChosen,
-      isNextVisible,
-      alternatives,
+    const { currentId, seconds, isDisabled, isAnswerChosen,
+      answerChosen, isNextVisible, alternatives,
     } = this.state;
     return (
       <main className="game-section">
@@ -129,7 +122,12 @@ class Game extends React.Component {
                 {answers[currentId].category}
               </h2>
               <div className="question__box">
-                <p data-testid="question__text">{answers[currentId].question}</p>
+                <p
+                  className="question__text"
+                  data-testid="question-text"
+                >
+                  {answers[currentId].question}
+                </p>
                 <RenderAlternatives
                   alternatives={ alternatives }
                   currentId={ currentId }
@@ -150,27 +148,11 @@ class Game extends React.Component {
             </>
           )}
         </div>
-        <Timer seconds={ seconds } />
+        { !isAnswerChosen && <Timer seconds={ seconds } /> }
       </main>
     );
   }
 }
-/* =======
-                <p className="question__text" data-testid="question-text">
-                  {answers[currentId].question}
-                </p>
-                <RenderAlternatives
-                  correct={ answers[currentId].correct_answer }
-                  incorrect={ answers[currentId].incorrect_answers }
-                />
-              </div>
-            </>
-          )}
-        </div>
->>>>>>> main-group-11
-    );
-  }
-} */
 
 const mapDispatchToPros = (dispatch) => ({
   getAnswers: (token) => dispatch(actionGetAnswers(token)),

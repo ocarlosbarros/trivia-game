@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Timer from './Timer';
 
 class RenderAlternatives extends React.Component {
   constructor(props) {
@@ -51,7 +50,6 @@ class RenderAlternatives extends React.Component {
             ))
           }
         </div>
-        <Timer />
         { isAnswerChosen && <p>{`Você escolheu ${answerChosen}`}</p> }
       </>
     );
@@ -66,9 +64,8 @@ RenderAlternatives.propTypes = {
   correct: PropTypes.string.isRequired,
   incorrect: PropTypes.string.isRequired,
   isAnswerChosen: PropTypes.bool.isRequired,
-  isDisabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
-  shuffle: PropTypes.func.isRequired,
 };
 
 export default RenderAlternatives;
