@@ -1,4 +1,4 @@
-import { GET_ANSWERS } from '../Actions';
+import { GET_ANSWERS } from '../Actions/index';
 
 const INITIAL_STATE = {
   token: '',

@@ -1,25 +1,33 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { actionGetAnswers, actionChangeAssertions,
-  actionChangeScore } from '../Redux/Actions';
+import { actionGetAnswers } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
+import Timer from '../ReactComponents/Timer';
+import '../css/Game.css';
 
-const CORRECT_ANSWER = 'correct-answer';
-const TEN_POINTS = 10;
-
+const randomizer = 0.5;
 class Game extends React.Component {
   constructor() {
     super();
 
     this.state = {
       currentId: 0,
-      timer: 30,
+      seconds: 30,
+      incorrect: [],
+      isDisabled: false,
+      isAnswerChosen: false,
+      answerChosen: '',
+      isNextVisible: false,
+      alternatives: [],
     };
-
-    this.selectAnswer = this.selectAnswer.bind(this);
-    this.getDifficultyAnswer = this.getDifficultyAnswer.bind(this);
+    this.startTimer = this.startTimer.bind(this);
+    this.resetTimer = this.resetTimer.bind(this);
+    this.verifyAnswer = this.verifyAnswer.bind(this);
+    this.nextAnswer = this.nextAnswer.bind(this);
+    this.shuffle = this.shuffle.bind(this);
+    this.showCorrectAnswer = this.showCorrectAnswer.bind(this);
   }
 
   async componentDidMount() {
@@ -78,27 +86,113 @@ class Game extends React.Component {
     clearInterval(this.TIMER);
   }
 
-  render() {
+  async componentDidUpdate(prevProps, prevState) {
+    const { seconds } = prevState;
+    const FINAL = 0;
+    const isFinal = seconds === FINAL;
+    if (isFinal) {
+      this.showCorrectAnswer();
+      this.resetTimer();
+      // setTimeout(() => {
+      //   this.nextAnswer();
+      // }, ONE_SECOND);
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+  showCorrectAnswer() {
+    this.setState({ isAnswerChosen: true, isNextVisible: true, isDisabled: true });
+  }
+
+  shuffle(alt) {
+    const alternatives = alt.sort(() => Math.random() - randomizer);
+    this.setState({ alternatives });
+  }
+
+  nextAnswer() {
     const { answers } = this.props;
     const { currentId } = this.state;
+    if (currentId < answers.length - 1) {
+      this.setState((prevState) => ({
+        currentId: prevState.currentId + 1,
+        isAnswerChosen: false,
+      }));
+    }
+  }
+
+  startTimer() {
+    // Timer
+    const SECOND = 1000;
+    this.timer = setInterval(() => {
+      this.setState((prevState) => ({
+        seconds: prevState.seconds - 1,
+      }));
+    }, SECOND);
+  }
+
+  resetTimer() {
+    this.setState((prevState) => ({
+      seconds: 30,
+      incorrect: prevState.incorrect - 1,
+    }));
+  }
+
+  verifyAnswer({ target }) {
+    this.setState({
+      isDisabled: true,
+      isAnswerChosen: true,
+      answerChosen: target.innerHTML,
+    });
+    this.setState({ isNextVisible: true });
+    clearInterval(this.timer);
+  }
+
+  render() {
+    const { answers } = this.props;
+    const { currentId, seconds, isDisabled, isAnswerChosen,
+      answerChosen, isNextVisible, alternatives,
+    } = this.state;
     return (
-      <>
+      <main className="game-section">
         <Header />
         <div className="quiz">
           {answers && (
             <>
-              <p data-testid="question-category">{answers[currentId].category}</p>
-              <p data-testid="question-text">{answers[currentId].question}</p>
-              <RenderAlternatives
-                onClick={ this.selectAnswer }
-                answersList={ answers }
-                correct={ answers[currentId].correct_answer }
-                incorrect={ answers[currentId].incorrect_answers }
-              />
+              <h2 className="heading-secondary" data-testid="question-category">
+                {answers[currentId].category}
+              </h2>
+              <div className="question__box">
+                <p
+                  className="question__text"
+                  data-testid="question-text"
+                >
+                  {answers[currentId].question}
+                </p>
+                <RenderAlternatives
+                  alternatives={ alternatives }
+                  currentId={ currentId }
+                  onClick={ this.verifyAnswer }
+                  disabled={ isDisabled }
+                  isAnswerChosen={ isAnswerChosen }
+                  answerChosen={ answerChosen }
+                  correct={ answers[currentId].correct_answer }
+                  incorrect={ answers[currentId].incorrect_answers }
+                  shuffle={ this.shuffle }
+                />
+              </div>
+              {isNextVisible && (
+                <button onClick={ this.nextAnswer } type="button">
+                  Próxima
+                </button>
+              )}
             </>
           )}
         </div>
-      </>
+        { !isAnswerChosen && <Timer seconds={ seconds } /> }
+      </main>
     );
   }
 }

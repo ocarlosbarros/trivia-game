@@ -1,67 +1,70 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const randomizer = 0.5;
-const CORRECT_ANSWER = 'correct-answer';
-
 class RenderAlternatives extends React.Component {
   constructor(props) {
     super(props);
-    this.shuffle = this.shuffle.bind(this);
-
-    this.state = {
-      alternatives: [],
-      correct: props.correct,
-      incorrect: props.incorrect,
-    };
-  }
-
-  componentDidMount() {
-    const { correct, incorrect } = this.props;
-    const formatAlternatives = [correct, ...incorrect];
-    this.shuffle(formatAlternatives);
+    this.colorLogic = this.colorLogic.bind(this);
   }
 
   getIncorrectId(currIncorrectAnswer) {
-    const { incorrect } = this.state;
+    const { incorrect } = this.props;
     const id = incorrect.indexOf(currIncorrectAnswer);
     return `wrong-answer-${id}`;
   }
 
-  shuffle(alt) {
-    const alternatives = alt.sort(() => Math.random() - randomizer);
-    this.setState({ alternatives });
+  colorLogic(alternative) {
+    const { isAnswerChosen, correct } = this.props;
+    if (isAnswerChosen) {
+      return alternative === correct
+        ? '3px solid rgb(6, 240, 15)'
+        : '3px solid rgb(255, 0, 0)';
+    }
   }
 
   render() {
-    const { alternatives, correct } = this.state;
-    const { onClick } = this.props;
+    const { onClick, isAnswerChosen, answerChosen,
+      disabled, correct, incorrect } = this.props;
+    const alternatives = [correct, ...incorrect];
+    console.log(disabled);
     return (
-      <div className="quiz__alternatives">
-        {alternatives
-          && alternatives.map((curr, id) => (
-            <button
-              onClick={ onClick }
-              data-testid={
-                curr === correct ? CORRECT_ANSWER : this.getIncorrectId(curr)
-              }
-              className={
-                curr === correct ? CORRECT_ANSWER : 'incorrect-answer'
-              }
-              key={ id }
-              type="button"
-            >
-              {curr}
-            </button>
-          ))}
-      </div>
+      <>
+        <div className="quiz__alternatives">
+          {
+            alternatives && alternatives.map((curr, id) => (
+              <button
+                className="quiz__alternative"
+                style={ { border: this.colorLogic(curr) } }
+                disabled={ disabled }
+                onClick={ onClick }
+                data-testid={
+                  curr === correct
+                    ? 'correct-answer'
+                    : this.getIncorrectId(curr)
+                }
+                key={ id }
+                type="button"
+              >
+                {curr}
+              </button>
+            ))
+          }
+        </div>
+        { isAnswerChosen && <p>{`Você escolheu ${answerChosen}`}</p> }
+      </>
     );
   }
 }
 
 RenderAlternatives.propTypes = {
+  alternatives: PropTypes.shape({
+    map: PropTypes.func,
+  }).isRequired,
+  answerChosen: PropTypes.string.isRequired,
   correct: PropTypes.string.isRequired,
-  incorrect: PropTypes.arrayOf(String).isRequired,
+  incorrect: PropTypes.string.isRequired,
+  isAnswerChosen: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 
