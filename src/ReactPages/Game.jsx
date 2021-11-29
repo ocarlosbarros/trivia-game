@@ -5,7 +5,6 @@ import { actionGetAnswers } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import '../css/Game.css';
-import Timer from '../ReactComponents/Timer';
 
 class Game extends React.Component {
   constructor() {
@@ -94,21 +93,21 @@ class Game extends React.Component {
         <div className="quiz">
           {answers && (
             <>
-              <p data-testid="question-category">{answers[currentId].category}</p>
-              <p data-testid="question-text">{answers[currentId].question}</p>
-              <RenderAlternatives
-                onClick={ this.verifyAnswer }
-                disabled={ isDisabled }
-                isAnswerChosen={ isAnswerChosen }
-                answerChosen={ answerChosen }
-                correct={ answers[currentId].correct_answer }
-                incorrect={ answers[currentId].incorrect_answers }
-              />
-              { isNextVisible && <button onClick={ this.nextAnswer } type="button">Próxima</button>}
+              <h2 className="heading-secondary" data-testid="question-category">
+                {answers[currentId].category}
+              </h2>
+              <div className="question__box">
+                <p className="question__text" data-testid="question-text">
+                  {answers[currentId].question}
+                </p>
+                <RenderAlternatives
+                  correct={ answers[currentId].correct_answer }
+                  incorrect={ answers[currentId].incorrect_answers }
+                />
+              </div>
             </>
           )}
         </div>
-        <Timer seconds={ seconds } />
       </main>
     );
   }
