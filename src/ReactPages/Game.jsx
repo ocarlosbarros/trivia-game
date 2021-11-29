@@ -33,14 +33,13 @@ class Game extends React.Component {
   async componentDidMount() {
     const { getAnswers } = this.props;
     const token = JSON.parse(localStorage.getItem('token'));
-    const answers = await getAnswers(token);
+    await getAnswers(token);
     this.startTimer();
-    const { correct, incorrect } = this.state;
-    console.log('ans', answers);
+   /*  const { correct, incorrect } = this.state;
     console.log(incorrect);
     const formatAlternatives = [correct, ...incorrect];
     console.log('form', formatAlternatives);
-    this.shuffle(formatAlternatives);
+    this.shuffle(formatAlternatives); */
   }
 
   componentDidUpdate(prevProps, prevState) {
