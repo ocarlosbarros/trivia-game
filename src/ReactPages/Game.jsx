@@ -5,6 +5,7 @@ import { actionGetAnswers } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
+import '../css/Game.css';
 
 const randomizer = 0.5;
 
@@ -35,7 +36,7 @@ class Game extends React.Component {
     const token = JSON.parse(localStorage.getItem('token'));
     await getAnswers(token);
     this.startTimer();
-   /*  const { correct, incorrect } = this.state;
+    /*  const { correct, incorrect } = this.state;
     console.log(incorrect);
     const formatAlternatives = [correct, ...incorrect];
     console.log('form', formatAlternatives);
@@ -45,7 +46,7 @@ class Game extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const { seconds } = prevState;
     const FINAL = 0;
-    const isFinal = (seconds === FINAL);
+    const isFinal = seconds === FINAL;
     if (isFinal) {
       this.nextAnswer();
       this.resetTimer();
@@ -64,7 +65,7 @@ class Game extends React.Component {
   nextAnswer() {
     const { answers } = this.props;
     const { currentId } = this.state;
-    if (currentId < (answers.length - 1)) {
+    if (currentId < answers.length - 1) {
       this.setState((prevState) => ({
         currentId: prevState.currentId + 1,
       }));
@@ -100,37 +101,67 @@ class Game extends React.Component {
 
   render() {
     const { answers } = this.props;
-    const { currentId, seconds, isDisabled,
-      isAnswerChosen, answerChosen, isNextVisible, alternatives } = this.state;
+    const {
+      currentId,
+      seconds,
+      isDisabled,
+      isAnswerChosen,
+      answerChosen,
+      isNextVisible,
+      alternatives,
+    } = this.state;
     return (
-      <>
+      <main className="game-section">
         <Header />
         <div className="quiz">
           {answers && (
             <>
-              <p data-testid="question-category">{answers[currentId].category}</p>
-              <p data-testid="question-text">{answers[currentId].question}</p>
-              <RenderAlternatives
-                alternatives={ alternatives }
-                currentId={ currentId }
-                onClick={ this.verifyAnswer }
-                disabled={ isDisabled }
-                isAnswerChosen={ isAnswerChosen }
-                answerChosen={ answerChosen }
-                correct={ answers[currentId].correct_answer }
-                incorrect={ answers[currentId].incorrect_answers }
-                shuffle={ this.shuffle }
-              />
-              { isNextVisible
-              && <button onClick={ this.nextAnswer } type="button">Próxima</button>}
+              <h2 className="heading-secondary" data-testid="question-category">
+                {answers[currentId].category}
+              </h2>
+              <div className="question__box">
+                <p data-testid="question__text">{answers[currentId].question}</p>
+                <RenderAlternatives
+                  alternatives={ alternatives }
+                  currentId={ currentId }
+                  onClick={ this.verifyAnswer }
+                  disabled={ isDisabled }
+                  isAnswerChosen={ isAnswerChosen }
+                  answerChosen={ answerChosen }
+                  correct={ answers[currentId].correct_answer }
+                  incorrect={ answers[currentId].incorrect_answers }
+                  shuffle={ this.shuffle }
+                />
+              </div>
+              {isNextVisible && (
+                <button onClick={ this.nextAnswer } type="button">
+                  Próxima
+                </button>
+              )}
             </>
           )}
         </div>
         <Timer seconds={ seconds } />
-      </>
+      </main>
     );
   }
 }
+/* =======
+                <p className="question__text" data-testid="question-text">
+                  {answers[currentId].question}
+                </p>
+                <RenderAlternatives
+                  correct={ answers[currentId].correct_answer }
+                  incorrect={ answers[currentId].incorrect_answers }
+                />
+              </div>
+            </>
+          )}
+        </div>
+>>>>>>> main-group-11
+    );
+  }
+} */
 
 const mapDispatchToPros = (dispatch) => ({
   getAnswers: (token) => dispatch(actionGetAnswers(token)),

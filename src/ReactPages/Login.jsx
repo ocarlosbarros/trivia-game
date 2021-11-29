@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { loginAction } from '../Redux/Actions';
 import getToken from '../services/getToken';
+import '../css/Login.css';
+import sprite from '../sprite.svg';
 
 class Login extends React.Component {
   constructor(props) {
@@ -11,23 +13,21 @@ class Login extends React.Component {
     this.state = {
       name: '',
       email: '',
-      isButtonDisable: true,
+      isButtonDisabled: true,
     };
 
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange({ target: { value, name } }) {
-    this.setState({
-      [name]: value,
-      isButtonDisable: this.checkButton(),
-    });
+    this.setState({ [name]: value }, this.checkButton);
   }
 
   checkButton() {
     const { name, email } = this.state;
-    const result = !(name && email);
-    return result;
+    if (name.length !== 0 && email.includes('@' && '.com')) {
+      this.setState({ isButtonDisabled: false });
+    } else this.setState({ isButtonDisabled: true });
   }
 
   async handleClick(event) {
@@ -43,47 +43,46 @@ class Login extends React.Component {
   }
 
   render() {
-    const { name, email, isButtonDisable } = this.state;
+    const { name, email, isButtonDisabled } = this.state;
     return (
-      <form>
-        <p>Nome</p>
-        <input
-          type="text"
-          name="name"
-          placeholder="Juliette Freire"
-          data-testid="input-player-name"
-          value={ name }
-          onChange={ (e) => this.handleChange(e) }
-        />
-        <p>E-mail</p>
-        <input
-          typeof="email"
-          name="email"
-          placeholder="juliette123@gmail.com"
-          data-testid="input-gravatar-email"
-          value={ email }
-          onChange={ (e) => this.handleChange(e) }
-        />
-        <button
-          type="submit"
-          disabled={ isButtonDisable }
-          data-testid="btn-play"
-          onClick={ this.handleClick }
-        >
-          Jogar
-
+      <div className="login-page">
+        <button className="config-btn" type="submit" data-testid="btn-settings">
+          <svg className="config-icon">
+            <use href={ `${sprite}#icon-cog` } />
+          </svg>
+          <Link className="config-btn" to="config">Configurações</Link>
         </button>
-        <header className="App-header">
+        <h1 className="heading-primary">TRIVIA</h1>
+        <form className="form">
+          <p className="form__label">Nome</p>
+          <input
+            className="form__input"
+            type="text"
+            name="name"
+            data-testid="input-player-name"
+            value={ name }
+            onChange={ (e) => this.handleChange(e) }
+          />
+          <p className="form__label">E-mail</p>
+          <input
+            className="form__input"
+            typeof="email"
+            name="email"
+            data-testid="input-gravatar-email"
+            value={ email }
+            onChange={ (e) => this.handleChange(e) }
+          />
           <button
+            className={ isButtonDisabled ? 'form__btn-disabled' : 'form__btn' }
             type="submit"
-            data-testid="btn-settings"
+            disabled={ isButtonDisabled }
+            data-testid="btn-play"
+            onClick={ this.handleClick }
           >
-            <Link to="config">
-              Configurações
-            </Link>
+            Jogar
           </button>
-        </header>
-      </form>
+        </form>
+      </div>
     );
   }
 }

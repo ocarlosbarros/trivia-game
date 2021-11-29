@@ -9,14 +9,12 @@ import Ranking from './ReactPages/Ranking';
 
 export default function App() {
   return (
-    <div>
-      <Switch>
-        <Route exact path="/" component={ Login } />
-        <Route path="/game" component={ Game } />
-        <Route path="/config" component={ Config } />
-        <Route path="/feedback" component={ Feedback } />
-        <Route path="/ranking" component={ Ranking } />
-      </Switch>
-    </div>
+    <Switch>
+      <Route exact path="/" component={ Login } />
+      <Route path="/game" component={ Game } />
+      <Route path="/config" component={ Config } />
+      <Route path="/feedback" component={ Feedback } />
+      <Route path="/ranking" component={ Ranking } />
+    </Switch>
   );
 }

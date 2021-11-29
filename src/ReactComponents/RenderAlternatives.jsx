@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Timer from './Timer';
 
 class RenderAlternatives extends React.Component {
   constructor(props) {
@@ -35,6 +36,7 @@ class RenderAlternatives extends React.Component {
           {
             alternatives && alternatives.map((curr, id) => (
               <button
+                className="quiz__alternative"
                 style={ { border: this.colorLogic(curr) } }
                 disabled={ isDisabled }
                 onClick={ onClick }
@@ -51,6 +53,7 @@ class RenderAlternatives extends React.Component {
             ))
           }
         </div>
+        <Timer />
         { isAnswerChosen && <p>{`Você escolheu ${answerChosen}`}</p> }
       </>
     );
