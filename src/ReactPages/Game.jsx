@@ -7,6 +7,7 @@ import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
+import { readPlayers } from '../services/localStorage';
 
 const randomizer = 0.5;
 const CORRECT_ANSWER = 'correct-answer';
@@ -35,7 +36,9 @@ class Game extends React.Component {
 
   async componentDidMount() {
     const { getAnswers } = this.props;
-    const token = JSON.parse(localStorage.getItem('token'));
+    // const token = JSON.parse(localStorage.getItem('token'));
+    const player = readPlayers();
+    const { token } = player;
     getAnswers(token);
     this.startTimer();
   }
@@ -79,6 +82,7 @@ class Game extends React.Component {
     const assignedWeight = this.getAssignedWeight(difficulty);
     this.resetTimer();
     const { seconds } = this.state;
+    // Se assignedWeight for 0 quer dizer que usuário não acertou a resposta
     if (assignedWeight !== 0) {
       const score = TEN_POINTS + (seconds * assignedWeight);
       setScore(score);
