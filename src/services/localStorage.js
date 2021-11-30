@@ -1,4 +1,5 @@
 const PLAYERS = 'players';
+const TOKEN = 'token';
 
 if (!JSON.parse(localStorage.getItem(PLAYERS))) {
   localStorage.setItem(PLAYERS, JSON.stringify([]));
@@ -12,12 +13,15 @@ const readPlayers = () => {
 
 const savePlayer = (player) => {
   let playerList = readPlayers();
-  playerList = [...playerList, player];
-  localStorage.setItem(PLAYERS, JSON.stringify(playerList));
-  // localStorage.setItem(PLAYERS, JSON.stringify(player));
+  if (playerList) {
+    playerList = [...playerList, player];
+    localStorage.setItem(PLAYERS, JSON.stringify(playerList));
+  }
 };
 
 const saveToken = (token) => localStorage
-  .setItem('token', JSON.stringify(token));
+  .setItem(TOKEN, JSON.stringify(token));
 
-export { savePlayer, saveToken, readPlayers };
+const readToken = () => JSON.parse(localStorage.getItem(TOKEN));
+
+export { savePlayer, saveToken, readPlayers, readToken };

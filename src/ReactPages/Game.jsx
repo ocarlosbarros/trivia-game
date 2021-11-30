@@ -2,13 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { actionGetAnswers,
-  actionChangeAssertions, actionChangeScore, actionGetPlayer } from '../Redux/Actions';
+  actionChangeAssertions, actionChangeScore } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
-import { readPlayers } from '../services/localStorage';
-import getToken from '../services/getToken';
 
 const randomizer = 0.5;
 const CORRECT_ANSWER = 'correct-answer';
@@ -36,17 +34,8 @@ class Game extends React.Component {
   }
 
   async componentDidMount() {
-    const { getAnswers } = this.props;
-    const { history: { location: { state: { player } } } } = this.props;
-    const players = readPlayers();
-    const playerFound = players
-      .find((playerLogged) => playerLogged.gravatarEmail === player.gravatarEmail);
-    if (playerFound) {
-      getAnswers(playerFound.token);
-    } else {
-      const { token } = await getToken();
-      getAnswers(token);
-    }
+    const { getAnswers, history: { location: { state: { token } } } } = this.props;
+    getAnswers(token);
     this.startTimer();
   }
 
@@ -91,15 +80,22 @@ class Game extends React.Component {
   }
 
   selectAnswer({ target }) {
-    const { setAssertion, answers } = this.props;
+    const { setAssertion, answers, players } = this.props;
     const selectedAnswer = target.innerText;
-    const assertion = target.className === CORRECT_ANSWER ? 1 : 0;
+    let assertion = target.className === CORRECT_ANSWER ? 1 : 0;
     setAssertion(assertion);
     const difficulty = this.getDifficultyAnswer(selectedAnswer, answers);
     const assignedWeight = this.getAssignedWeight(difficulty);
     this.resetTimer();
     const { seconds } = this.state;
-    this.calculateScore(seconds, assignedWeight);
+    const score = this.calculateScore(seconds, assignedWeight);
+    const updatedPlayers = {
+      ...players,
+      assertions: assertion += 1,
+      score,
+    };
+    console.log(updatedPlayers);
+    // savePlayer(updatedPlayers);
   }
 
   startTimer() {
@@ -184,7 +180,6 @@ class Game extends React.Component {
                   answerChosen={ answerChosen }
                   correct={ answers[currentId].correct_answer }
                   incorrect={ answers[currentId].incorrect_answers }
-                  shuffle={ this.shuffle }
                 />
               </div>
               {isNextVisible && (
@@ -211,13 +206,17 @@ const mapDispatchToPros = (dispatch) => ({
   setScore: (score) => dispatch(actionChangeScore(score)),
 });
 
-const mapStateToProps = ({ gameInfo }) => ({
+const mapStateToProps = ({ gameInfo, players }) => ({
   answers: gameInfo.answers.results,
+  players,
 });
 
 Game.propTypes = {
-  answers: PropTypes.arrayOf().isRequired,
+  answers: PropTypes.shape({
+    length: PropTypes.number,
+  }).isRequired,
   getAnswers: PropTypes.func.isRequired,
+  players: PropTypes.objectOf.isRequired,
   setAssertion: PropTypes.func.isRequired,
   setScore: PropTypes.func.isRequired,
   history: PropTypes.objectOf.isRequired,

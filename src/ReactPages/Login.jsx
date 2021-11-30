@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { loginAction } from '../Redux/Actions';
 import getToken from '../services/getToken';
-import { savePlayer, readPlayers } from '../services/localStorage';
+import { readPlayers, readToken, savePlayer, saveToken } from '../services/localStorage';
 import '../css/Login.css';
 import sprite from '../sprite.svg';
 
@@ -35,27 +35,26 @@ class Login extends React.Component {
 
   async handleClick(event) {
     const { name, gravatarEmail, assertions, score } = this.state;
-    const { login } = this.props;
-    const { history } = this.props;
+    const { login, history } = this.props;
     event.preventDefault();
-
-    const players = readPlayers();
-    const playerLogged = players.find((player) => player.gravatarEmail === gravatarEmail);
-
-    if (playerLogged) {
-      const { nameLogged, gravatarEmailLogged, tokenLogged } = playerLogged;
-      login({ nameLogged, gravatarEmailLogged, tokenLogged });
+    const playersList = readPlayers();
+    const playerFound = playersList
+      .find((player) => player.gravatarEmail === gravatarEmail);
+    if (playerFound) {
+      const { token } = await getToken();
+      saveToken(token);
       history.push({
         pathname: '/game',
-        state: { player: playerLogged },
+        state: { token },
       });
     } else {
+      login({ name, gravatarEmail });
       const { token } = await getToken();
-      login({ name, gravatarEmail, token });
-      savePlayer({ name, gravatarEmail, token, assertions, score });
+      saveToken(token);
+      savePlayer({ name, gravatarEmail, assertions, score });
       history.push({
         pathname: '/game',
-        state: { player: { name, gravatarEmail, token, assertions, score } },
+        state: { token },
       });
     }
   }
