@@ -1,13 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { actionGetAnswers } from '../Redux/Actions';
+import { actionGetAnswers,
+  actionChangeAssertions, actionChangeScore, actionGetPlayer } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
+import { readPlayers } from '../services/localStorage';
+import getToken from '../services/getToken';
 
 const randomizer = 0.5;
+const CORRECT_ANSWER = 'correct-answer';
+
 class Game extends React.Component {
   constructor() {
     super();
@@ -15,7 +20,6 @@ class Game extends React.Component {
     this.state = {
       currentId: 0,
       seconds: 30,
-      /* correct: '', */
       incorrect: [],
       isDisabled: false,
       isAnswerChosen: false,
@@ -33,14 +37,17 @@ class Game extends React.Component {
 
   async componentDidMount() {
     const { getAnswers } = this.props;
-    const token = JSON.parse(localStorage.getItem('token'));
-    await getAnswers(token);
+    const { history: { location: { state: { player } } } } = this.props;
+    const players = readPlayers();
+    const playerFound = players
+      .find((playerLogged) => playerLogged.gravatarEmail === player.gravatarEmail);
+    if (playerFound) {
+      getAnswers(playerFound.token);
+    } else {
+      const { token } = await getToken();
+      getAnswers(token);
+    }
     this.startTimer();
-    /*  const { correct, incorrect } = this.state;
-    console.log(incorrect);
-    const formatAlternatives = [correct, ...incorrect];
-    console.log('form', formatAlternatives);
-    this.shuffle(formatAlternatives); */
   }
 
   async componentDidUpdate(prevProps, prevState) {
@@ -50,14 +57,55 @@ class Game extends React.Component {
     if (isFinal) {
       this.showCorrectAnswer();
       this.resetTimer();
-      // setTimeout(() => {
-      //   this.nextAnswer();
-      // }, ONE_SECOND);
     }
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
+  }
+
+  getAssignedWeight(difficulty) {
+    const assignedWeight = {
+      hard: 3,
+      medium: 2,
+      easy: 1,
+    };
+    return assignedWeight[difficulty] ? assignedWeight[difficulty] : 0;
+  }
+
+  getDifficultyAnswer(selectedAnswer = '', answersList = []) {
+    const answerFound = answersList.find((answer) => (
+      selectedAnswer === answer.correct_answer));
+    if (answerFound) return answerFound.difficulty;
+  }
+
+  selectAnswer({ target }) {
+    const TEN_POINTS = 10;
+    const { setAssertion, answers, setScore } = this.props;
+    const selectedAnswer = target.innerText;
+    const assertion = target.className === CORRECT_ANSWER ? 1 : 0;
+    setAssertion(assertion);
+    const difficulty = this.getDifficultyAnswer(selectedAnswer, answers);
+    const assignedWeight = this.getAssignedWeight(difficulty);
+    this.resetTimer();
+    const { seconds } = this.state;
+    // Se assignedWeight for 0 quer dizer que usuário não acertou a resposta
+    if (assignedWeight !== 0) {
+      const score = TEN_POINTS + (seconds * assignedWeight);
+      setScore(score);
+      const teste = actionGetPlayer();
+      console.log(teste);
+    }
+  }
+
+  startTimer() {
+    // Timer
+    const SECOND = 1000;
+    this.timer = setInterval(() => {
+      this.setState((prevState) => ({
+        seconds: prevState.seconds - 1,
+      }));
+    }, SECOND);
   }
 
   showCorrectAnswer() {
@@ -76,18 +124,10 @@ class Game extends React.Component {
       this.setState((prevState) => ({
         currentId: prevState.currentId + 1,
         isAnswerChosen: false,
+        isDisabled: false,
       }));
     }
-  }
-
-  startTimer() {
-    // Timer
-    const SECOND = 1000;
-    this.timer = setInterval(() => {
-      this.setState((prevState) => ({
-        seconds: prevState.seconds - 1,
-      }));
-    }, SECOND);
+    this.startTimer();
   }
 
   resetTimer() {
@@ -103,6 +143,7 @@ class Game extends React.Component {
       isAnswerChosen: true,
       answerChosen: target.innerHTML,
     });
+    this.selectAnswer({ target });
     this.setState({ isNextVisible: true });
     clearInterval(this.timer);
   }
@@ -148,7 +189,7 @@ class Game extends React.Component {
             </>
           )}
         </div>
-        { !isAnswerChosen && <Timer seconds={ seconds } /> }
+        <Timer seconds={ seconds } />
       </main>
     );
   }
@@ -156,6 +197,8 @@ class Game extends React.Component {
 
 const mapDispatchToPros = (dispatch) => ({
   getAnswers: (token) => dispatch(actionGetAnswers(token)),
+  setAssertion: (assertion) => dispatch(actionChangeAssertions(assertion)),
+  setScore: (score) => dispatch(actionChangeScore(score)),
 });
 
 const mapStateToProps = ({ gameInfo }) => ({
@@ -164,9 +207,10 @@ const mapStateToProps = ({ gameInfo }) => ({
 
 Game.propTypes = {
   answers: PropTypes.arrayOf().isRequired,
-  // correct: PropTypes.number.isRequired,
-  // incorrect: PropTypes.number.isRequired,
   getAnswers: PropTypes.func.isRequired,
+  setAssertion: PropTypes.func.isRequired,
+  setScore: PropTypes.func.isRequired,
+  history: PropTypes.objectOf.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToPros)(Game);

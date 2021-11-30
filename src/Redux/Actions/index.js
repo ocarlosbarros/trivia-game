@@ -13,10 +13,18 @@ const actionGetAnswers = (token) => async (dispatch) => {
   dispatch(actionAnswers(answers));
 };
 
+const CHANGE_ASSERTIONS = 'CHANGE_ASSERTIONS';
+const CHANGE_SCORE = 'CHANGE_SCORE';
+
+const actionChangeAssertions = (increment) => (
+  { type: CHANGE_ASSERTIONS, payload: increment });
+
+const actionChangeScore = (score) => ({ type: CHANGE_SCORE, payload: score });
+
 const GET_PLAYER = 'GET_PLAYER';
 const GET_GRAVATAR_IMAGE = 'GET_GRAVATAR_IMAGE';
 const LOGIN = 'LOGIN';
-const getPlayerAction = (player) => ({ type: GET_PLAYER, payload: player });
+const actionGetPlayer = (player) => ({ type: GET_PLAYER, payload: player });
 
 const loginAction = (player) => ({ type: LOGIN, payload: player });
 
@@ -32,7 +40,7 @@ function getGravatarImageAction(email) {
 }
 
 export {
-  getPlayerAction,
+  actionGetPlayer,
   GET_PLAYER,
   loginAction,
   LOGIN,
@@ -41,4 +49,8 @@ export {
   actionGetAnswers,
   GET_ANSWERS,
   actionAnswers,
+  CHANGE_ASSERTIONS,
+  actionChangeAssertions,
+  CHANGE_SCORE,
+  actionChangeScore,
 };

@@ -1,4 +1,5 @@
-import { GET_PLAYER, GET_GRAVATAR_IMAGE, LOGIN } from '../Actions';
+import { GET_PLAYER, GET_GRAVATAR_IMAGE,
+  LOGIN, CHANGE_ASSERTIONS, CHANGE_SCORE } from '../Actions';
 
 const INITIAL_STATE = {
   name: '',
@@ -17,10 +18,16 @@ function players(state = INITIAL_STATE, action) {
       gravatarEmail: action.payload.email,
     };
   case GET_PLAYER:
-    return { ...state };
+    return { ...state, players: action.payload.player };
 
   case GET_GRAVATAR_IMAGE:
     return { ...state, imagePath: action.payload };
+
+  case CHANGE_ASSERTIONS:
+    return { ...state, assertions: state.assertions + action.payload };
+
+  case CHANGE_SCORE:
+    return { ...state, score: action.payload };
   default:
     return state;
   }

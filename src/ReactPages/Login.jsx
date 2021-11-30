@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { loginAction } from '../Redux/Actions';
 import getToken from '../services/getToken';
+import { savePlayer, readPlayers } from '../services/localStorage';
 import '../css/Login.css';
 import sprite from '../sprite.svg';
 
@@ -12,7 +13,9 @@ class Login extends React.Component {
     super(props);
     this.state = {
       name: '',
-      email: '',
+      gravatarEmail: '',
+      assertions: 0,
+      score: 0,
       isButtonDisabled: true,
     };
 
@@ -24,26 +27,41 @@ class Login extends React.Component {
   }
 
   checkButton() {
-    const { name, email } = this.state;
-    if (name.length !== 0 && email.includes('@' && '.com')) {
+    const { name, gravatarEmail } = this.state;
+    if (name.length !== 0 && gravatarEmail.includes('@' && '.com')) {
       this.setState({ isButtonDisabled: false });
     } else this.setState({ isButtonDisabled: true });
   }
 
   async handleClick(event) {
-    const { name, email } = this.state;
+    const { name, gravatarEmail, assertions, score } = this.state;
     const { login } = this.props;
     const { history } = this.props;
     event.preventDefault();
-    login({ name, email });
-    const { token } = await getToken();
-    console.log(token);
-    localStorage.setItem('token', JSON.stringify(token));
-    history.push('/game');
+
+    const players = readPlayers();
+    const playerLogged = players.find((player) => player.gravatarEmail === gravatarEmail);
+
+    if (playerLogged) {
+      const { nameLogged, gravatarEmailLogged, tokenLogged } = playerLogged;
+      login({ nameLogged, gravatarEmailLogged, tokenLogged });
+      history.push({
+        pathname: '/game',
+        state: { player: playerLogged },
+      });
+    } else {
+      const { token } = await getToken();
+      login({ name, gravatarEmail, token });
+      savePlayer({ name, gravatarEmail, token, assertions, score });
+      history.push({
+        pathname: '/game',
+        state: { player: { name, gravatarEmail, token, assertions, score } },
+      });
+    }
   }
 
   render() {
-    const { name, email, isButtonDisabled } = this.state;
+    const { name, gravatarEmail, isButtonDisabled } = this.state;
     return (
       <div className="login-page">
         <button className="config-btn" type="submit" data-testid="btn-settings">
@@ -67,9 +85,9 @@ class Login extends React.Component {
           <input
             className="form__input"
             typeof="email"
-            name="email"
+            name="gravatarEmail"
             data-testid="input-gravatar-email"
-            value={ email }
+            value={ gravatarEmail }
             onChange={ (e) => this.handleChange(e) }
           />
           <button
