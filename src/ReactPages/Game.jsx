@@ -79,9 +79,19 @@ class Game extends React.Component {
     if (answerFound) return answerFound.difficulty;
   }
 
-  selectAnswer({ target }) {
+  calculateScore(seconds, assignedWeight) {
     const TEN_POINTS = 10;
-    const { setAssertion, answers, setScore } = this.props;
+    const { setScore } = this.props;
+    // Se assignedWeight for 0 quer dizer que usuário não acertou a resposta
+    if (assignedWeight !== 0) {
+      const score = TEN_POINTS + (seconds * assignedWeight);
+      setScore(score);
+      return score;
+    }
+  }
+
+  selectAnswer({ target }) {
+    const { setAssertion, answers } = this.props;
     const selectedAnswer = target.innerText;
     const assertion = target.className === CORRECT_ANSWER ? 1 : 0;
     setAssertion(assertion);
@@ -89,13 +99,7 @@ class Game extends React.Component {
     const assignedWeight = this.getAssignedWeight(difficulty);
     this.resetTimer();
     const { seconds } = this.state;
-    // Se assignedWeight for 0 quer dizer que usuário não acertou a resposta
-    if (assignedWeight !== 0) {
-      const score = TEN_POINTS + (seconds * assignedWeight);
-      setScore(score);
-      const teste = actionGetPlayer();
-      console.log(teste);
-    }
+    this.calculateScore(seconds, assignedWeight);
   }
 
   startTimer() {
@@ -125,8 +129,10 @@ class Game extends React.Component {
         currentId: prevState.currentId + 1,
         isAnswerChosen: false,
         isDisabled: false,
+        isNextVisible: true,
       }));
     }
+    this.setState({ isNextVisible: false });
     this.startTimer();
   }
 
@@ -182,7 +188,11 @@ class Game extends React.Component {
                 />
               </div>
               {isNextVisible && (
-                <button onClick={ this.nextAnswer } type="button">
+                <button
+                  data-testid="btn-next"
+                  onClick={ this.nextAnswer }
+                  type="button"
+                >
                   Próxima
                 </button>
               )}
