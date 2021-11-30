@@ -8,6 +8,7 @@ import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
 import { readPlayers } from '../services/localStorage';
+import getToken from '../services/getToken';
 
 const randomizer = 0.5;
 const CORRECT_ANSWER = 'correct-answer';
@@ -36,9 +37,15 @@ class Game extends React.Component {
 
   async componentDidMount() {
     const { getAnswers } = this.props;
-    const player = readPlayers();
-    const { token } = player;
-    getAnswers(token);
+    const { history: { location: { state: { player } } } } = this.props;
+    const players = readPlayers();
+    const playerFound = players.find((playerLogged) => playerLogged.gravatarEmail === player.gravatarEmail);
+    if (playerFound) {
+      getAnswers(playerFound.token);
+    } else {
+      const { token } = await getToken();
+      getAnswers(token);
+    }
     this.startTimer();
   }
 

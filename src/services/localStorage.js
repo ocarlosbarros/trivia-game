@@ -11,7 +11,10 @@ const readPlayers = () => {
 };
 
 const savePlayer = (player) => {
-  localStorage.setItem(PLAYERS, JSON.stringify(player));
+  let playerList = readPlayers();
+  playerList = [...playerList, player];
+  localStorage.setItem(PLAYERS, JSON.stringify(playerList));
+  // localStorage.setItem(PLAYERS, JSON.stringify(player));
 };
 
 const saveToken = (token) => localStorage
