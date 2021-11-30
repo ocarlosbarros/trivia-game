@@ -39,7 +39,8 @@ class Game extends React.Component {
     const { getAnswers } = this.props;
     const { history: { location: { state: { player } } } } = this.props;
     const players = readPlayers();
-    const playerFound = players.find((playerLogged) => playerLogged.gravatarEmail === player.gravatarEmail);
+    const playerFound = players
+      .find((playerLogged) => playerLogged.gravatarEmail === player.gravatarEmail);
     if (playerFound) {
       getAnswers(playerFound.token);
     } else {
@@ -205,10 +206,11 @@ const mapStateToProps = ({ gameInfo }) => ({
 });
 
 Game.propTypes = {
+  answers: PropTypes.arrayOf().isRequired,
   getAnswers: PropTypes.func.isRequired,
-  answers: PropTypes.arrayOf(Object).isRequired,
   setAssertion: PropTypes.func.isRequired,
   setScore: PropTypes.func.isRequired,
+  history: PropTypes.objectOf.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToPros)(Game);
