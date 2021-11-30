@@ -1,13 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { actionGetAnswers } from '../Redux/Actions';
+import { actionGetAnswers,
+  actionChangeAssertions, actionChangeScore } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
 
 const randomizer = 0.5;
+const CORRECT_ANSWER = 'correct-answer';
+
 class Game extends React.Component {
   constructor() {
     super();
@@ -37,13 +40,27 @@ class Game extends React.Component {
     this.startTimer();
   }
 
+  async componentDidUpdate(prevProps, prevState) {
+    const { seconds } = prevState;
+    const FINAL = 0;
+    const isFinal = seconds === FINAL;
+    if (isFinal) {
+      this.showCorrectAnswer();
+      this.resetTimer();
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
   getAssignedWeight(difficulty) {
     const assignedWeight = {
       hard: 3,
       medium: 2,
       easy: 1,
     };
-    return assignedWeight[difficulty];
+    return assignedWeight[difficulty] ? assignedWeight[difficulty] : 0;
   }
 
   getDifficultyAnswer(selectedAnswer = '', answersList = []) {
@@ -53,54 +70,29 @@ class Game extends React.Component {
   }
 
   selectAnswer({ target }) {
+    const TEN_POINTS = 10;
     const { setAssertion, answers, setScore } = this.props;
     const selectedAnswer = target.innerText;
     const assertion = target.className === CORRECT_ANSWER ? 1 : 0;
     setAssertion(assertion);
-
-    if (assertion !== 0) {
-      const difficulty = this.getDifficultyAnswer(selectedAnswer, answers);
-      const assignedWeight = this.getAssignedWeight(difficulty);
-      this.endTimer();
-      const { timer } = this.state;
-      const score = TEN_POINTS + (timer * assignedWeight);
+    const difficulty = this.getDifficultyAnswer(selectedAnswer, answers);
+    const assignedWeight = this.getAssignedWeight(difficulty);
+    this.resetTimer();
+    const { seconds } = this.state;
+    if (assignedWeight !== 0) {
+      const score = TEN_POINTS + (seconds * assignedWeight);
       setScore(score);
     }
   }
 
   startTimer() {
-    const ONE_SECOND = 1;
-    const ONE_MILLISECONDS = 1000;
-    const { timer } = this.state;
-    if (timer > 0) {
-      this.TIMER = setInterval(() => {
-        this.setState((prevState) => (
-          { timer: prevState.timer > 0 ? prevState.timer - ONE_SECOND : 0 }));
-      }, ONE_MILLISECONDS);
-    } else {
-      clearInterval(this.TIMER);
-    }
-  }
-
-  endTimer() {
-    clearInterval(this.TIMER);
-  }
-
-  async componentDidUpdate(prevProps, prevState) {
-    const { seconds } = prevState;
-    const FINAL = 0;
-    const isFinal = seconds === FINAL;
-    if (isFinal) {
-      this.showCorrectAnswer();
-      this.resetTimer();
-      // setTimeout(() => {
-      //   this.nextAnswer();
-      // }, ONE_SECOND);
-    }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
+    // Timer
+    const SECOND = 1000;
+    this.timer = setInterval(() => {
+      this.setState((prevState) => ({
+        seconds: prevState.seconds - 1,
+      }));
+    }, SECOND);
   }
 
   showCorrectAnswer() {
@@ -119,18 +111,10 @@ class Game extends React.Component {
       this.setState((prevState) => ({
         currentId: prevState.currentId + 1,
         isAnswerChosen: false,
+        isDisabled: false,
       }));
     }
-  }
-
-  startTimer() {
-    // Timer
-    const SECOND = 1000;
-    this.timer = setInterval(() => {
-      this.setState((prevState) => ({
-        seconds: prevState.seconds - 1,
-      }));
-    }, SECOND);
+    this.startTimer();
   }
 
   resetTimer() {
@@ -146,6 +130,7 @@ class Game extends React.Component {
       isAnswerChosen: true,
       answerChosen: target.innerHTML,
     });
+    this.selectAnswer({ target });
     this.setState({ isNextVisible: true });
     clearInterval(this.timer);
   }
@@ -191,7 +176,7 @@ class Game extends React.Component {
             </>
           )}
         </div>
-        { !isAnswerChosen && <Timer seconds={ seconds } /> }
+        <Timer seconds={ seconds } />
       </main>
     );
   }
@@ -199,7 +184,7 @@ class Game extends React.Component {
 
 const mapDispatchToPros = (dispatch) => ({
   getAnswers: (token) => dispatch(actionGetAnswers(token)),
-  setAssertion: (target) => dispatch(actionChangeAssertions(target)),
+  setAssertion: (assertion) => dispatch(actionChangeAssertions(assertion)),
   setScore: (score) => dispatch(actionChangeScore(score)),
 });
 
