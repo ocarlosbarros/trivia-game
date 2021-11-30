@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { actionGetAnswers,
-  actionChangeAssertions, actionChangeScore } from '../Redux/Actions';
+  actionChangeAssertions, actionChangeScore, actionGetPlayer } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
@@ -36,7 +36,6 @@ class Game extends React.Component {
 
   async componentDidMount() {
     const { getAnswers } = this.props;
-    // const token = JSON.parse(localStorage.getItem('token'));
     const player = readPlayers();
     const { token } = player;
     getAnswers(token);
@@ -86,6 +85,8 @@ class Game extends React.Component {
     if (assignedWeight !== 0) {
       const score = TEN_POINTS + (seconds * assignedWeight);
       setScore(score);
+      const teste = actionGetPlayer();
+      console.log(teste);
     }
   }
 

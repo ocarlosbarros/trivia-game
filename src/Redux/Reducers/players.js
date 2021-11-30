@@ -18,7 +18,7 @@ function players(state = INITIAL_STATE, action) {
       gravatarEmail: action.payload.email,
     };
   case GET_PLAYER:
-    return { ...state };
+    return { ...state, players: action.payload.player };
 
   case GET_GRAVATAR_IMAGE:
     return { ...state, imagePath: action.payload };
