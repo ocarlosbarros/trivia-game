@@ -24,7 +24,7 @@ const actionChangeScore = (score) => ({ type: CHANGE_SCORE, payload: score });
 const GET_PLAYER = 'GET_PLAYER';
 const GET_GRAVATAR_IMAGE = 'GET_GRAVATAR_IMAGE';
 const LOGIN = 'LOGIN';
-const getPlayerAction = (player) => ({ type: GET_PLAYER, payload: player });
+const actionGetPlayer = (player) => ({ type: GET_PLAYER, payload: player });
 
 const loginAction = (player) => ({ type: LOGIN, payload: player });
 
@@ -40,7 +40,7 @@ function getGravatarImageAction(email) {
 }
 
 export {
-  getPlayerAction,
+  actionGetPlayer,
   GET_PLAYER,
   loginAction,
   LOGIN,

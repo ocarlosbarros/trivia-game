@@ -14,6 +14,8 @@ class Login extends React.Component {
     this.state = {
       name: '',
       gravatarEmail: '',
+      assertions: 0,
+      score: 0,
       isButtonDisabled: true,
     };
 
@@ -32,13 +34,13 @@ class Login extends React.Component {
   }
 
   async handleClick(event) {
-    const { name, gravatarEmail } = this.state;
+    const { name, gravatarEmail, assertions, score } = this.state;
     const { login } = this.props;
     const { history } = this.props;
     event.preventDefault();
     login({ name, gravatarEmail });
     const { token } = await getToken();
-    savePlayer({ name, gravatarEmail, token });
+    savePlayer({ name, gravatarEmail, token, assertions, score });
     history.push('/game');
   }
 

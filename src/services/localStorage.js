@@ -4,12 +4,7 @@ if (!JSON.parse(localStorage.getItem(PLAYERS))) {
   localStorage.setItem(PLAYERS, JSON.stringify([]));
 }
 const savePlayer = (player) => {
-  const savedPlayer = {
-    ...player,
-    assertions: 0,
-    score: 0,
-  };
-  localStorage.setItem(PLAYERS, JSON.stringify(savedPlayer));
+  localStorage.setItem(PLAYERS, JSON.stringify(player));
 };
 
 const readPlayers = () => {
