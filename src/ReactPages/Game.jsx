@@ -223,7 +223,6 @@ Game.propTypes = {
   players: PropTypes.objectOf.isRequired,
   setAssertion: PropTypes.func.isRequired,
   setScore: PropTypes.func.isRequired,
-  history: PropTypes.objectOf.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToPros)(Game);
