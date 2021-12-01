@@ -8,7 +8,7 @@ import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
 import getToken from '../services/getToken';
-import { readPlayers, saveToken, savePlayersList } from '../services/localStorage';
+import { readPlayers, saveToken, savePlayer } from '../services/localStorage';
 
 const randomizer = 0.5;
 const CORRECT_ANSWER = 'correct-answer';
@@ -33,25 +33,24 @@ class Game extends React.Component {
     this.nextAnswer = this.nextAnswer.bind(this);
     this.shuffle = this.shuffle.bind(this);
     this.showCorrectAnswer = this.showCorrectAnswer.bind(this);
+    this.selectAnswer = this.selectAnswer.bind(this);
   }
 
   async componentDidMount() {
     const { getAnswers } = this.props;
-    this.playerList = readPlayers();
     const { token } = await getToken();
+    this.playersList = readPlayers();
     getAnswers(token);
     saveToken(token);
     this.startTimer();
   }
 
-  async componentDidUpdate(prevProps, prevState) {
-    const { seconds } = prevState;
-    const FINAL = 0;
-    const isFinal = seconds === FINAL;
-    if (isFinal) {
+  componentDidUpdate(prevState, prevProps) {
+    const SIXSECONDS = 6000;
+    setTimeout(() => {
       this.showCorrectAnswer();
       this.resetTimer();
-    }
+    }, SIXSECONDS);
   }
 
   componentWillUnmount() {
@@ -95,15 +94,12 @@ class Game extends React.Component {
     const { seconds } = this.state;
     const score = this.calculateScore(seconds, assignedWeight);
 
-    const updatedList = this.playerList
-      .filter((player) => players.gravatarEmail !== player.gravatarEmail);
-    const updatedPlayers = {
+    const updatedPlayer = {
       ...players,
       assertions: players.assertions + assertion,
       score: players.score + score,
     };
-    this.playerList = [...updatedList, updatedPlayers];
-    savePlayersList(this.playerList);
+    savePlayer(updatedPlayer);
   }
 
   startTimer() {

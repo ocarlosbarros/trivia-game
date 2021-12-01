@@ -10,16 +10,14 @@ const readPlayers = () => {
   return players;
 };
 
-const savePlayer = (player) => {
-  let playerList = readPlayers();
-  if (playerList) {
-    playerList = [...playerList, player];
-    localStorage.setItem(PLAYERS, JSON.stringify(playerList));
+const savePlayer = (newPlayer) => {
+  let playersList = readPlayers();
+  playersList = playersList
+    .filter((player) => player.gravatarEmail !== newPlayer.gravatarEmail);
+  if (playersList) {
+    playersList = [...playersList, newPlayer];
+    localStorage.setItem(PLAYERS, JSON.stringify(playersList));
   }
-};
-
-const savePlayersList = (playerList) => {
-  localStorage.setItem(PLAYERS, JSON.stringify(playerList));
 };
 
 const saveToken = (token) => localStorage
@@ -27,4 +25,4 @@ const saveToken = (token) => localStorage
 
 const readToken = () => JSON.parse(localStorage.getItem(TOKEN));
 
-export { savePlayer, saveToken, readPlayers, readToken, savePlayersList };
+export { savePlayer, saveToken, readPlayers, readToken };
