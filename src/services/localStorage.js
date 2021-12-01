@@ -7,7 +7,7 @@ if (!JSON.parse(localStorage.getItem(PLAYERS))) {
 
 const readPlayers = () => {
   const players = JSON.parse(localStorage.getItem(PLAYERS));
-
+  console.log(players);
   return players;
 };
 

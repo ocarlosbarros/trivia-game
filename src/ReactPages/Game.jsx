@@ -7,6 +7,8 @@ import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
+import getToken from '../services/getToken';
+import { saveToken } from '../services/localStorage';
 
 const randomizer = 0.5;
 const CORRECT_ANSWER = 'correct-answer';
@@ -34,8 +36,10 @@ class Game extends React.Component {
   }
 
   async componentDidMount() {
-    const { getAnswers, history: { location: { state: { token } } } } = this.props;
+    const { getAnswers } = this.props;
+    const { token } = await getToken();
     getAnswers(token);
+    saveToken(token);
     this.startTimer();
   }
 

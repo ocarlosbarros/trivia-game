@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { loginAction } from '../Redux/Actions';
-import getToken from '../services/getToken';
-import { readPlayers, readToken, savePlayer, saveToken } from '../services/localStorage';
+import { readPlayers, savePlayer } from '../services/localStorage';
 import '../css/Login.css';
 import sprite from '../sprite.svg';
 
@@ -22,6 +21,10 @@ class Login extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  componentDidMount() {
+    this.playersList = readPlayers();
+  }
+
   handleChange({ target: { value, name } }) {
     this.setState({ [name]: value }, this.checkButton);
   }
@@ -37,24 +40,18 @@ class Login extends React.Component {
     const { name, gravatarEmail, assertions, score } = this.state;
     const { login, history } = this.props;
     event.preventDefault();
-    const playersList = readPlayers();
-    const playerFound = playersList
-      .find((player) => player.gravatarEmail === gravatarEmail);
-    if (playerFound) {
-      const { token } = await getToken();
-      saveToken(token);
+
+    const isRegister = this.playersList
+      .some((player) => player.gravatarEmail === gravatarEmail);
+    if (isRegister) {
       history.push({
         pathname: '/game',
-        state: { token },
       });
     } else {
       login({ name, gravatarEmail });
-      const { token } = await getToken();
-      saveToken(token);
       savePlayer({ name, gravatarEmail, assertions, score });
       history.push({
         pathname: '/game',
-        state: { token },
       });
     }
   }
