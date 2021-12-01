@@ -8,7 +8,7 @@ import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
 import getToken from '../services/getToken';
-import { saveToken } from '../services/localStorage';
+import { readPlayers, saveToken, savePlayersList } from '../services/localStorage';
 
 const randomizer = 0.5;
 const CORRECT_ANSWER = 'correct-answer';
@@ -86,20 +86,24 @@ class Game extends React.Component {
   selectAnswer({ target }) {
     const { setAssertion, answers, players } = this.props;
     const selectedAnswer = target.innerText;
-    let assertion = target.className === CORRECT_ANSWER ? 1 : 0;
+    const assertion = target.className === CORRECT_ANSWER ? 1 : 0;
     setAssertion(assertion);
     const difficulty = this.getDifficultyAnswer(selectedAnswer, answers);
     const assignedWeight = this.getAssignedWeight(difficulty);
     this.resetTimer();
     const { seconds } = this.state;
     const score = this.calculateScore(seconds, assignedWeight);
+    let playerList = readPlayers();
+    const updatedList = playerList
+      .filter((player) => players.gravatarEmail !== player.gravatarEmail);
     const updatedPlayers = {
       ...players,
-      assertions: assertion += 1,
+      assertions: players.assertions + 1,
       score,
     };
-    console.log(updatedPlayers);
-    // savePlayer(updatedPlayers);
+    console.log(updatedList);
+    playerList = [...updatedList, updatedPlayers];
+    savePlayersList(playerList);
   }
 
   startTimer() {
