@@ -99,7 +99,7 @@ class Game extends React.Component {
     const updatedPlayers = {
       ...players,
       assertions: players.assertions + 1,
-      score,
+      score: players.score + score,
     };
     console.log(updatedList);
     playerList = [...updatedList, updatedPlayers];

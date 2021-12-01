@@ -41,10 +41,10 @@ class Login extends React.Component {
     const { login, history } = this.props;
     event.preventDefault();
 
-    const isRegister = this.playersList
-      .some((player) => player.gravatarEmail === gravatarEmail);
-    if (isRegister) {
+    if (this.playersList
+      .some((player) => player.gravatarEmail === gravatarEmail)) {
       login({ name, gravatarEmail });
+
       history.push({
         pathname: '/game',
       });
