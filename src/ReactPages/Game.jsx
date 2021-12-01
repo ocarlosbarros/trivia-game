@@ -37,6 +37,7 @@ class Game extends React.Component {
 
   async componentDidMount() {
     const { getAnswers } = this.props;
+    this.playerList = readPlayers();
     const { token } = await getToken();
     getAnswers(token);
     saveToken(token);
@@ -93,17 +94,16 @@ class Game extends React.Component {
     this.resetTimer();
     const { seconds } = this.state;
     const score = this.calculateScore(seconds, assignedWeight);
-    let playerList = readPlayers();
-    const updatedList = playerList
+
+    const updatedList = this.playerList
       .filter((player) => players.gravatarEmail !== player.gravatarEmail);
     const updatedPlayers = {
       ...players,
-      assertions: players.assertions + 1,
+      assertions: players.assertions + assertion,
       score: players.score + score,
     };
-    console.log(updatedList);
-    playerList = [...updatedList, updatedPlayers];
-    savePlayersList(playerList);
+    this.playerList = [...updatedList, updatedPlayers];
+    savePlayersList(this.playerList);
   }
 
   startTimer() {
@@ -118,6 +118,7 @@ class Game extends React.Component {
 
   showCorrectAnswer() {
     this.setState({ isAnswerChosen: true, isNextVisible: true, isDisabled: true });
+    clearInterval(this.timer);
   }
 
   shuffle(alt) {
