@@ -44,6 +44,7 @@ class Login extends React.Component {
     const isRegister = this.playersList
       .some((player) => player.gravatarEmail === gravatarEmail);
     if (isRegister) {
+      login({ name, gravatarEmail });
       history.push({
         pathname: '/game',
       });
