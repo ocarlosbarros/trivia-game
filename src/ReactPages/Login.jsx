@@ -40,7 +40,8 @@ class Login extends React.Component {
     event.preventDefault();
 
     const players = readPlayers();
-    const playerLogged = players.find((player) => player.gravatarEmail === gravatarEmail);
+    const playerLogged = players
+      ? players.find((player) => player.gravatarEmail === gravatarEmail) : false;
 
     if (playerLogged) {
       const { nameLogged, gravatarEmailLogged, tokenLogged } = playerLogged;

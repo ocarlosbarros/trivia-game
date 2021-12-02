@@ -48,6 +48,8 @@ class Game extends React.Component {
       getAnswers(token);
     }
     this.startTimer();
+    const stateStorage = JSON.parse(localStorage.getItem('players'))[0];
+    localStorage.setItem('state', JSON.stringify({ player: stateStorage }));
   }
 
   async componentDidUpdate(prevProps, prevState) {
@@ -79,6 +81,25 @@ class Game extends React.Component {
     if (answerFound) return answerFound.difficulty;
   }
 
+  newState(target) {
+    const TEN_POINTS = 10;
+    const { answers } = this.props;
+    const { seconds } = this.state;
+    const selectedAnswer = target.innerText;
+    const isAnswerCorrect = target.className === CORRECT_ANSWER;
+    const difficulty = this.getDifficultyAnswer(selectedAnswer, answers);
+    const assignedWeight = this.getAssignedWeight(difficulty);
+    const scoreResult = TEN_POINTS + (seconds * assignedWeight);
+    const stateStorage = JSON.parse(localStorage.getItem('state')).player;
+    const score = stateStorage.score + scoreResult;
+    const assertions = stateStorage.assertions + 1;
+    const newObj = JSON.stringify({ player: { ...stateStorage, score, assertions } });
+    if (isAnswerCorrect) {
+      localStorage.setItem('state', newObj);
+      console.log(newObj);
+    }
+  }
+
   selectAnswer({ target }) {
     const TEN_POINTS = 10;
     const { setAssertion, answers, setScore } = this.props;
@@ -96,6 +117,7 @@ class Game extends React.Component {
       const teste = actionGetPlayer();
       console.log(teste);
     }
+    this.newState(target);
   }
 
   startTimer() {

@@ -12,7 +12,7 @@ const readPlayers = () => {
 
 const savePlayer = (player) => {
   let playerList = readPlayers();
-  playerList = [...playerList, player];
+  playerList = playerList ? [...playerList, player] : [player];
   localStorage.setItem(PLAYERS, JSON.stringify(playerList));
   // localStorage.setItem(PLAYERS, JSON.stringify(player));
 };
