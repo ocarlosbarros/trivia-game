@@ -2,32 +2,54 @@ import { GET_PLAYER, GET_GRAVATAR_IMAGE,
   LOGIN, CHANGE_ASSERTIONS, CHANGE_SCORE } from '../Actions';
 
 const INITIAL_STATE = {
-  name: '',
-  assertions: 0,
-  score: 0,
-  gravatarEmail: '',
-  imagePath: '',
+  player: {
+    name: '',
+    assertions: 0,
+    score: 0,
+    gravatarEmail: '',
+  },
 };
 
 function players(state = INITIAL_STATE, action) {
+  console.log(action.payload);
   switch (action.type) {
   case LOGIN:
     return {
       ...state,
-      name: action.payload.name,
-      gravatarEmail: action.payload.gravatarEmail,
+      player: {
+        ...state.player,
+        name: action.payload.name,
+        gravatarEmail: action.payload.gravatarEmail,
+      },
     };
   case GET_PLAYER:
-    return { ...state, players: action.payload.player };
+    return { ...state, player: action.payload };
 
   case GET_GRAVATAR_IMAGE:
-    return { ...state, imagePath: action.payload };
+    return {
+      ...state,
+      player: {
+        ...state.player,
+        gravatarEmail: action.payload.gravatarEmail,
+      },
+    };
 
   case CHANGE_ASSERTIONS:
-    return { ...state, assertions: state.assertions + action.payload };
+    return {
+      ...state,
+      player: {
+        ...state.player,
+        assertions: state.player.assertions + action.payload,
+      },
+    };
 
   case CHANGE_SCORE:
-    return { ...state, score: state.score + action.payload };
+    return {
+      player: {
+        ...state.player,
+        score: state.player.score + action.payload,
+      },
+    };
   default:
     return state;
   }

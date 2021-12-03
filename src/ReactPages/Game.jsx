@@ -134,6 +134,7 @@ class Game extends React.Component {
         currentId: prevState.currentId + 1,
         isAnswerChosen: false,
         isDisabled: false,
+        isNextVisible: false,
       }));
     }
     this.startTimer();
@@ -191,7 +192,11 @@ class Game extends React.Component {
                 />
               </div>
               {isNextVisible && (
-                <button onClick={ this.nextAnswer } type="button">
+                <button
+                  data-testid="btn-next"
+                  onClick={ this.nextAnswer }
+                  type="button"
+                >
                   Próxima
                 </button>
               )}

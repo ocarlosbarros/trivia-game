@@ -33,26 +33,14 @@ class Login extends React.Component {
     } else this.setState({ isButtonDisabled: true });
   }
 
-  async handleClick(event) {
+  handleClick(event) {
+    event.preventDefault();
     const { name, gravatarEmail, assertions, score } = this.state;
     const { login } = this.props;
     const { history } = this.props;
-    event.preventDefault();
-
-    const players = readPlayers();
-    const playerLogged = players
-      ? players.find((player) => player.gravatarEmail === gravatarEmail) : false;
-
-    if (playerLogged) {
-      const { nameLogged, gravatarEmailLogged, tokenLogged } = playerLogged;
-      login({ nameLogged, gravatarEmailLogged, tokenLogged });
-      history.push('/game');
-    } else {
-      const { token } = await getToken();
-      login({ name, gravatarEmail, token });
-      savePlayer({ name, gravatarEmail, assertions, score });
-      history.push('/game');
-    }
+    login({ name, gravatarEmail, assertions, score });
+    savePlayer({ name, gravatarEmail, assertions, score });
+    history.push('/game');
   }
 
   render() {

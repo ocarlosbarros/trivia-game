@@ -55,9 +55,9 @@ Header.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  name: state.players.name,
-  imagePath: state.players.imagePath,
-  score: state.players.score,
+  name: state.players.player.name,
+  imagePath: state.players.player.imagePath,
+  score: state.players.player.score,
 });
 
 const mapDispatchToProps = (dispatch) => ({
