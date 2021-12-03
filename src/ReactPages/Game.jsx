@@ -7,7 +7,7 @@ import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
-import { saveToken } from '../services/localStorage';
+import { savePlayer, saveToken } from '../services/localStorage';
 import getToken from '../services/getToken';
 
 const CORRECT_ANSWER = 'correct-answer';
@@ -39,17 +39,19 @@ class Game extends React.Component {
     getAnswers(token);
     saveToken(token);
     this.startTimer();
-    const stateStorage = JSON.parse(localStorage.getItem('players'))[0];
-    localStorage.setItem('state', JSON.stringify({ player: { ...stateStorage } }));
   }
 
   async componentDidUpdate(prevProps, prevState) {
     const { seconds } = prevState;
+    const { player } = this.props;
     const FINAL = 0;
     const isFinal = seconds === FINAL;
     if (isFinal) {
       this.showCorrectAnswer();
       this.resetTimer();
+    }
+    if (player !== prevProps.player) {
+      savePlayer(player);
     }
   }
 
@@ -78,23 +80,6 @@ class Game extends React.Component {
     return score;
   }
 
-  newState(target) {
-    const { answers } = this.props;
-    const { seconds } = this.state;
-    const selectedAnswer = target.innerText;
-    const isAnswerCorrect = target.className === CORRECT_ANSWER;
-    const difficulty = this.getDifficultyAnswer(selectedAnswer, answers);
-    const assignedWeight = this.getAssignedWeight(difficulty);
-    const scoreResult = this.calculateScore(seconds, assignedWeight);
-    const stateStorage = JSON.parse(localStorage.getItem('state')).player;
-    const score = stateStorage.score + scoreResult;
-    const assertions = stateStorage.assertions + 1;
-    const newObj = JSON.stringify({ player: { ...stateStorage, score, assertions } });
-    if (isAnswerCorrect) {
-      localStorage.setItem('state', newObj);
-    }
-  }
-
   selectAnswer({ target }) {
     const { setAssertion, answers, setScore } = this.props;
     const selectedAnswer = target.innerText;
@@ -109,7 +94,6 @@ class Game extends React.Component {
       const score = this.calculateScore(seconds, assignedWeight);
       setScore(score);
     }
-    this.newState(target);
   }
 
   startTimer() {
@@ -215,13 +199,22 @@ const mapDispatchToPros = (dispatch) => ({
   setScore: (score) => dispatch(actionChangeScore(score)),
 });
 
-const mapStateToProps = ({ gameInfo }) => ({
+const mapStateToProps = ({ gameInfo, players }) => ({
   answers: gameInfo.answers.results,
+  player: players.player,
 });
 
 Game.propTypes = {
-  answers: PropTypes.arrayOf().isRequired,
+  answers: PropTypes.shape({
+    length: PropTypes.number,
+  }).isRequired,
   getAnswers: PropTypes.func.isRequired,
+  player: PropTypes.shape({
+    name: PropTypes.string,
+    gravatarEmail: PropTypes.string,
+    assertions: PropTypes.number,
+    score: PropTypes.number,
+  }).isRequired,
   setAssertion: PropTypes.func.isRequired,
   setScore: PropTypes.func.isRequired,
 };

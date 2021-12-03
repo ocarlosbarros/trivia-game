@@ -1,21 +1,19 @@
-const PLAYERS = 'players';
+const STATE = 'state';
 
-const readPlayers = () => {
-  if (!JSON.parse(localStorage.getItem(PLAYERS))) {
-    localStorage.setItem(PLAYERS, JSON.stringify([]));
+const readPlayer = () => {
+  if (!JSON.parse(localStorage.getItem(STATE))) {
+    localStorage.setItem(STATE, JSON.stringify({}));
   }
-  const players = JSON.parse(localStorage.getItem(PLAYERS));
-  return players;
+  const player = JSON.parse(localStorage.getItem(STATE));
+
+  return player;
 };
 
 const savePlayer = (player) => {
-  let playerList = readPlayers();
-  playerList = playerList ? [...playerList, player] : [player];
-  localStorage.setItem(PLAYERS, JSON.stringify(playerList));
-  // localStorage.setItem(PLAYERS, JSON.stringify(player));
+  localStorage.setItem(STATE, JSON.stringify({ player }));
 };
 
 const saveToken = (token) => localStorage
   .setItem('token', JSON.stringify(token));
 
-export { savePlayer, saveToken, readPlayers };
+export { savePlayer, saveToken, readPlayer };

@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { loginAction } from '../Redux/Actions';
-import getToken from '../services/getToken';
-import { savePlayer, readPlayers } from '../services/localStorage';
+import { savePlayer } from '../services/localStorage';
 import '../css/Login.css';
 import sprite from '../sprite.svg';
 

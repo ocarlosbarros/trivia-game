@@ -11,9 +11,8 @@ const INITIAL_STATE = {
 };
 
 function players(state = INITIAL_STATE, action) {
-  console.log(action.payload);
   switch (action.type) {
-  case LOGIN:
+  case LOGIN: {
     return {
       ...state,
       player: {
@@ -22,15 +21,20 @@ function players(state = INITIAL_STATE, action) {
         gravatarEmail: action.payload.gravatarEmail,
       },
     };
+  }
   case GET_PLAYER:
-    return { ...state, player: action.payload };
+    return {
+      ...state,
+      player: {
+        ...action.payload,
+      } };
 
   case GET_GRAVATAR_IMAGE:
     return {
       ...state,
       player: {
         ...state.player,
-        gravatarEmail: action.payload.gravatarEmail,
+        gravatarEmail: action.payload,
       },
     };
 
