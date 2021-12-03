@@ -15,7 +15,7 @@ function players(state = INITIAL_STATE, action) {
     return {
       ...state,
       name: action.payload.name,
-      gravatarEmail: action.payload.email,
+      gravatarEmail: action.payload.gravatarEmail,
     };
   case GET_PLAYER:
     return { ...state, players: action.payload.player };
