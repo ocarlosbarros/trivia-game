@@ -14,6 +14,6 @@ const savePlayer = (player) => {
 };
 
 const saveToken = (token) => localStorage
-  .setItem('token', JSON.stringify(token));
+  .setItem(TOKEN, JSON.stringify(token));
 
 export { savePlayer, saveToken, readPlayer };

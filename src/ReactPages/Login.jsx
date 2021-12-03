@@ -21,6 +21,10 @@ class Login extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  componentDidMount() {
+    this.playersList = readPlayers();
+  }
+
   handleChange({ target: { value, name } }) {
     this.setState({ [name]: value }, this.checkButton);
   }
