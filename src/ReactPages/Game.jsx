@@ -7,12 +7,8 @@ import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
-<<<<<<< HEAD
 import { savePlayer, saveToken } from '../services/localStorage';
-=======
->>>>>>> cacff9b775175ec90ba71d791ffe44c2365d7923
 import getToken from '../services/getToken';
-import { readPlayers, saveToken, savePlayer } from '../services/localStorage';
 
 const CORRECT_ANSWER = 'correct-answer';
 
@@ -41,16 +37,11 @@ class Game extends React.Component {
   async componentDidMount() {
     const { getAnswers } = this.props;
     const { token } = await getToken();
-<<<<<<< HEAD
-=======
-    this.playersList = readPlayers();
->>>>>>> cacff9b775175ec90ba71d791ffe44c2365d7923
     getAnswers(token);
     saveToken(token);
     this.startTimer();
   }
 
-<<<<<<< HEAD
   async componentDidUpdate(prevProps, prevState) {
     const { seconds } = prevState;
     const { player } = this.props;
@@ -63,14 +54,6 @@ class Game extends React.Component {
     if (player !== prevProps.player) {
       savePlayer(player);
     }
-=======
-  componentDidUpdate(prevState, prevProps) {
-    const SIXSECONDS = 6000;
-    setTimeout(() => {
-      this.showCorrectAnswer();
-      this.resetTimer();
-    }, SIXSECONDS);
->>>>>>> cacff9b775175ec90ba71d791ffe44c2365d7923
   }
 
   componentWillUnmount() {
@@ -94,26 +77,12 @@ class Game extends React.Component {
 
   calculateScore(seconds, assignedWeight) {
     const TEN_POINTS = 10;
-<<<<<<< HEAD
     const score = TEN_POINTS + (seconds * assignedWeight);
     return score;
   }
 
   selectAnswer({ target }) {
     const { setAssertion, answers, setScore } = this.props;
-=======
-    const { setScore } = this.props;
-    // Se assignedWeight for 0 quer dizer que usuário não acertou a resposta
-    if (assignedWeight !== 0) {
-      const score = TEN_POINTS + (seconds * assignedWeight);
-      setScore(score);
-      return score;
-    }
-  }
-
-  selectAnswer({ target }) {
-    const { setAssertion, answers, players } = this.props;
->>>>>>> cacff9b775175ec90ba71d791ffe44c2365d7923
     const selectedAnswer = target.innerText;
     const assertion = target.className === CORRECT_ANSWER ? 1 : 0;
     setAssertion(assertion);
@@ -121,22 +90,11 @@ class Game extends React.Component {
     const assignedWeight = this.getAssignedWeight(difficulty);
     this.resetTimer();
     const { seconds } = this.state;
-<<<<<<< HEAD
     // Se assignedWeight for 0 quer dizer que usuário não acertou a resposta
     if (assignedWeight !== 0) {
       const score = this.calculateScore(seconds, assignedWeight);
       setScore(score);
     }
-=======
-    const score = this.calculateScore(seconds, assignedWeight);
-
-    const updatedPlayer = {
-      ...players,
-      assertions: players.assertions + assertion,
-      score: players.score + score,
-    };
-    savePlayer(updatedPlayer);
->>>>>>> cacff9b775175ec90ba71d791ffe44c2365d7923
   }
 
   startTimer() {
@@ -162,11 +120,7 @@ class Game extends React.Component {
         currentId: prevState.currentId + 1,
         isAnswerChosen: false,
         isDisabled: false,
-<<<<<<< HEAD
         isNextVisible: false,
-=======
-        isNextVisible: true,
->>>>>>> cacff9b775175ec90ba71d791ffe44c2365d7923
       }));
     }
     this.setState({ isNextVisible: false });
@@ -249,11 +203,7 @@ const mapDispatchToPros = (dispatch) => ({
 
 const mapStateToProps = ({ gameInfo, players }) => ({
   answers: gameInfo.answers.results,
-<<<<<<< HEAD
   player: players.player,
-=======
-  players,
->>>>>>> cacff9b775175ec90ba71d791ffe44c2365d7923
 });
 
 Game.propTypes = {
@@ -261,16 +211,12 @@ Game.propTypes = {
     length: PropTypes.number,
   }).isRequired,
   getAnswers: PropTypes.func.isRequired,
-<<<<<<< HEAD
   player: PropTypes.shape({
     name: PropTypes.string,
     gravatarEmail: PropTypes.string,
     assertions: PropTypes.number,
     score: PropTypes.number,
   }).isRequired,
-=======
-  players: PropTypes.objectOf.isRequired,
->>>>>>> cacff9b775175ec90ba71d791ffe44c2365d7923
   setAssertion: PropTypes.func.isRequired,
   setScore: PropTypes.func.isRequired,
 };

@@ -1,5 +1,5 @@
 const STATE = 'state';
-
+const TOKEN = 'token';
 const readPlayer = () => {
   if (!JSON.parse(localStorage.getItem(STATE))) {
     localStorage.setItem(STATE, JSON.stringify({}));
