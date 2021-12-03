@@ -1,12 +1,10 @@
 const PLAYERS = 'players';
 
-if (!JSON.parse(localStorage.getItem(PLAYERS))) {
-  localStorage.setItem(PLAYERS, JSON.stringify([]));
-}
-
 const readPlayers = () => {
+  if (!JSON.parse(localStorage.getItem(PLAYERS))) {
+    localStorage.setItem(PLAYERS, JSON.stringify([]));
+  }
   const players = JSON.parse(localStorage.getItem(PLAYERS));
-
   return players;
 };
 

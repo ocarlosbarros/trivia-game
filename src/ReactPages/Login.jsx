@@ -46,18 +46,12 @@ class Login extends React.Component {
     if (playerLogged) {
       const { nameLogged, gravatarEmailLogged, tokenLogged } = playerLogged;
       login({ nameLogged, gravatarEmailLogged, tokenLogged });
-      history.push({
-        pathname: '/game',
-        state: { player: playerLogged },
-      });
+      history.push('/game');
     } else {
       const { token } = await getToken();
       login({ name, gravatarEmail, token });
-      savePlayer({ name, gravatarEmail, token, assertions, score });
-      history.push({
-        pathname: '/game',
-        state: { player: { name, gravatarEmail, token, assertions, score } },
-      });
+      savePlayer({ name, gravatarEmail, assertions, score });
+      history.push('/game');
     }
   }
 

@@ -25,7 +25,7 @@ class RenderAlternatives extends React.Component {
   render() {
     const { onClick, isAnswerChosen, answerChosen,
       disabled, correct, incorrect } = this.props;
-    const alternatives = [correct, ...incorrect];
+    const alternatives = [correct, ...incorrect].sort();
     return (
       <>
         <div className="quiz__alternatives">

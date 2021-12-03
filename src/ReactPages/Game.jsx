@@ -7,10 +7,9 @@ import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
 import '../css/Game.css';
-import { readPlayers } from '../services/localStorage';
+import { saveToken } from '../services/localStorage';
 import getToken from '../services/getToken';
 
-const randomizer = 0.5;
 const CORRECT_ANSWER = 'correct-answer';
 
 class Game extends React.Component {
@@ -31,25 +30,17 @@ class Game extends React.Component {
     this.resetTimer = this.resetTimer.bind(this);
     this.verifyAnswer = this.verifyAnswer.bind(this);
     this.nextAnswer = this.nextAnswer.bind(this);
-    this.shuffle = this.shuffle.bind(this);
     this.showCorrectAnswer = this.showCorrectAnswer.bind(this);
   }
 
   async componentDidMount() {
     const { getAnswers } = this.props;
-    const { history: { location: { state: { player } } } } = this.props;
-    const players = readPlayers();
-    const playerFound = players
-      .find((playerLogged) => playerLogged.gravatarEmail === player.gravatarEmail);
-    if (playerFound) {
-      getAnswers(playerFound.token);
-    } else {
-      const { token } = await getToken();
-      getAnswers(token);
-    }
+    const { token } = await getToken();
+    getAnswers(token);
+    saveToken(token);
     this.startTimer();
     const stateStorage = JSON.parse(localStorage.getItem('players'))[0];
-    localStorage.setItem('state', JSON.stringify({ player: stateStorage }));
+    localStorage.setItem('state', JSON.stringify({ player: { ...stateStorage } }));
   }
 
   async componentDidUpdate(prevProps, prevState) {
@@ -133,11 +124,6 @@ class Game extends React.Component {
 
   showCorrectAnswer() {
     this.setState({ isAnswerChosen: true, isNextVisible: true, isDisabled: true });
-  }
-
-  shuffle(alt) {
-    const alternatives = alt.sort(() => Math.random() - randomizer);
-    this.setState({ alternatives });
   }
 
   nextAnswer() {
@@ -233,7 +219,6 @@ Game.propTypes = {
   getAnswers: PropTypes.func.isRequired,
   setAssertion: PropTypes.func.isRequired,
   setScore: PropTypes.func.isRequired,
-  history: PropTypes.objectOf.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToPros)(Game);
