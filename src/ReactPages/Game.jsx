@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { actionGetAnswers,
-  actionChangeAssertions, actionChangeScore, actionGetPlayer } from '../Redux/Actions';
+  actionChangeAssertions, actionChangeScore } from '../Redux/Actions';
 import RenderAlternatives from '../ReactComponents/RenderAlternatives';
 import Header from '../ReactComponents/Header';
 import Timer from '../ReactComponents/Timer';
@@ -81,27 +81,30 @@ class Game extends React.Component {
     if (answerFound) return answerFound.difficulty;
   }
 
-  newState(target) {
+  calculateScore(seconds, assignedWeight) {
     const TEN_POINTS = 10;
+    const score = TEN_POINTS + (seconds * assignedWeight);
+    return score;
+  }
+
+  newState(target) {
     const { answers } = this.props;
     const { seconds } = this.state;
     const selectedAnswer = target.innerText;
     const isAnswerCorrect = target.className === CORRECT_ANSWER;
     const difficulty = this.getDifficultyAnswer(selectedAnswer, answers);
     const assignedWeight = this.getAssignedWeight(difficulty);
-    const scoreResult = TEN_POINTS + (seconds * assignedWeight);
+    const scoreResult = this.calculateScore(seconds, assignedWeight);
     const stateStorage = JSON.parse(localStorage.getItem('state')).player;
     const score = stateStorage.score + scoreResult;
     const assertions = stateStorage.assertions + 1;
     const newObj = JSON.stringify({ player: { ...stateStorage, score, assertions } });
     if (isAnswerCorrect) {
       localStorage.setItem('state', newObj);
-      console.log(newObj);
     }
   }
 
   selectAnswer({ target }) {
-    const TEN_POINTS = 10;
     const { setAssertion, answers, setScore } = this.props;
     const selectedAnswer = target.innerText;
     const assertion = target.className === CORRECT_ANSWER ? 1 : 0;
@@ -112,10 +115,8 @@ class Game extends React.Component {
     const { seconds } = this.state;
     // Se assignedWeight for 0 quer dizer que usuário não acertou a resposta
     if (assignedWeight !== 0) {
-      const score = TEN_POINTS + (seconds * assignedWeight);
+      const score = this.calculateScore(seconds, assignedWeight);
       setScore(score);
-      const teste = actionGetPlayer();
-      console.log(teste);
     }
     this.newState(target);
   }

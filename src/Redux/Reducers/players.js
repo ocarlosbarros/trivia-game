@@ -27,7 +27,7 @@ function players(state = INITIAL_STATE, action) {
     return { ...state, assertions: state.assertions + action.payload };
 
   case CHANGE_SCORE:
-    return { ...state, score: action.payload };
+    return { ...state, score: state.score + action.payload };
   default:
     return state;
   }
